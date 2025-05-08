@@ -1,4 +1,8 @@
+using D20Tek.Mediator;
+
 namespace MemberService.Endpoints.Forecasts;
+
+internal record WeatherForecastRequest() : IRequest<WeatherForecast[]>;
 
 internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {

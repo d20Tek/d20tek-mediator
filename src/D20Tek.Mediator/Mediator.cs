@@ -1,4 +1,6 @@
-﻿namespace D20Tek.Mediator;
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace D20Tek.Mediator;
 
 internal class Mediator : IMediator
 {
@@ -9,30 +11,25 @@ internal class Mediator : IMediator
         _provider = provider;
     }
 
-    public Task<TResponse> SendAsync<TResponse>(
-        IRequest<TResponse> request,
+    public Task<TResponse> SendAsync<TRequest, TResponse>(
+        TRequest request,
         CancellationToken cancellationToken = default)
+        where TRequest : IRequest<TResponse>
     {
         ArgumentNullException.ThrowIfNull(request, nameof(request));
 
-        var handlerType = typeof(IRequestHandler<,>).MakeGenericType(request.GetType(), typeof(TResponse));
-
-        var handler = _provider.GetService(handlerType) as IRequestHandler<IRequest<TResponse>, TResponse>
-            ?? throw new InvalidOperationException($"No handler registered for {request.GetType().Name}");
-
+        var handler = _provider.GetRequiredService<IRequestHandler<TRequest, TResponse>>();
         return handler.HandleAsync(request, cancellationToken);
     }
 
-    public Task SendAsync<TRequest>(TRequest request, CancellationToken cancellationToken = default)
+    public Task SendAsync<TRequest>(
+        TRequest request,
+        CancellationToken cancellationToken = default)
         where TRequest : IRequest
     {
         ArgumentNullException.ThrowIfNull(request, nameof(request));
 
-        var handlerType = typeof(IRequestHandler<>).MakeGenericType(request.GetType());
-
-        var handler = _provider.GetService(handlerType) as IRequestHandler<IRequest>
-            ?? throw new InvalidOperationException($"No handler registered for {request.GetType().Name}");
-
+        var handler = _provider.GetRequiredService<IRequestHandler<TRequest>>();
         return handler.HandleAsync(request, cancellationToken);
     }
 }

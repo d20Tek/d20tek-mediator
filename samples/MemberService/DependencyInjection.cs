@@ -1,4 +1,5 @@
-﻿using MemberService.Endpoints.Forecasts;
+﻿using D20Tek.Mediator;
+using MemberService.Endpoints.Forecasts;
 
 namespace MemberService;
 
@@ -7,6 +8,8 @@ internal static class DependencyInjection
     public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
     {
         // Add services to the container.
+        builder.Services.AddMediator()
+                        .AddScoped<IRequestHandler<WeatherForecastRequest, WeatherForecast[]>, GetForecastRequestHandler>();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();

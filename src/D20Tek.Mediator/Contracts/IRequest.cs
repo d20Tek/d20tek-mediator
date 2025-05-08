@@ -2,6 +2,6 @@
 
 public interface IRequest : IBaseRequest { }
 
-public interface IRequest<TResult> : IBaseRequest { }
+public interface IRequest<TResponse> : IBaseRequest { }
 
 public interface IBaseRequest { }
