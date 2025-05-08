@@ -14,7 +14,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddRequestHandlersFromAssembly(this IServiceCollection services, Assembly assembly)
     {
-        var handlerInterfaceType = typeof(IRequestHandler<,>);
+        var handlerInterfaceType = typeof(IRequestHandlerAsync<,>);
 
         var handlerTypes = assembly
             .GetTypes()

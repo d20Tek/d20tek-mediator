@@ -1,12 +1,12 @@
 ﻿namespace D20Tek.Mediator;
 
-public interface IRequestHandler<in TRequest, TResponse>
+public interface IRequestHandlerAsync<in TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
     Task<TResponse> HandleAsync(TRequest request, CancellationToken cancellationToken);
 }
 
-public interface IRequestHandler<in TRequest>
+public interface IRequestHandlerAsync<in TRequest>
     where TRequest : IRequest
 {
     Task HandleAsync(TRequest request, CancellationToken cancellationToken);

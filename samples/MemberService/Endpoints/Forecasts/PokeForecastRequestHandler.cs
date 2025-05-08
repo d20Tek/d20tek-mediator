@@ -2,7 +2,7 @@
 
 namespace MemberService.Endpoints.Forecasts;
 
-internal class PokeForecastRequestHandler : IRequestHandler<PokeRequest>
+internal class PokeForecastRequestHandler : IRequestHandlerAsync<PokeRequest>
 {
     public Task HandleAsync(PokeRequest request, CancellationToken cancellationToken)
     {

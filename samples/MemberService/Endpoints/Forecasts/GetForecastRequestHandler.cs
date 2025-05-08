@@ -2,7 +2,7 @@
 
 namespace MemberService.Endpoints.Forecasts;
 
-internal class GetForecastRequestHandler : IRequestHandler<WeatherForecastRequest, WeatherForecast[]>
+internal class GetForecastRequestHandler : IRequestHandlerAsync<WeatherForecastRequest, WeatherForecast[]>
 {
     private static readonly string[] _summaries =
     [
