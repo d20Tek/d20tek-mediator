@@ -11,15 +11,16 @@ internal class Mediator : IMediator
         _provider = provider;
     }
 
-    public Task<TResponse> SendAsync<TRequest, TResponse>(
-        TRequest request,
+    public Task<TResponse> SendAsync<TResponse>(
+        IRequest<TResponse> request,
         CancellationToken cancellationToken = default)
-        where TRequest : IRequest<TResponse>
     {
         ArgumentNullException.ThrowIfNull(request, nameof(request));
 
-        var handler = _provider.GetRequiredService<IRequestHandler<TRequest, TResponse>>();
-        return handler.HandleAsync(request, cancellationToken);
+        var handlerType = typeof(IRequestHandler<,>).MakeGenericType(request.GetType(), typeof(TResponse));
+        object handler = _provider.GetRequiredService(handlerType);
+
+        return InvokeHandlerAsync(handler, handlerType, request, cancellationToken);
     }
 
     public Task SendAsync<TRequest>(
@@ -29,7 +30,33 @@ internal class Mediator : IMediator
     {
         ArgumentNullException.ThrowIfNull(request, nameof(request));
 
-        var handler = _provider.GetRequiredService<IRequestHandler<TRequest>>();
-        return handler.HandleAsync(request, cancellationToken);
+        var handlerType = typeof(IRequestHandler<>).MakeGenericType(request.GetType());
+        object handler = _provider.GetRequiredService(handlerType);
+
+        return InvokeHandlerAsync(handler, handlerType, request, cancellationToken);
+    }
+
+    private static Task<TResponse> InvokeHandlerAsync<TResponse>(
+        object handler, Type handlerType, IRequest<TResponse> request, CancellationToken cancellationToken)
+    {
+        var method = handlerType.GetMethod("HandleAsync") ??
+            throw new InvalidOperationException($"Handler for {handlerType.Name} does not contain HandleAsync method");
+
+        var task = method.Invoke(handler, [request, cancellationToken]) ??
+            throw new InvalidOperationException($"Handler for {handlerType.Name}.HandleAsync invocation failed.");
+
+        return (Task<TResponse>)task!;
+    }
+
+    private static Task InvokeHandlerAsync(
+        object handler, Type handlerType, IRequest request, CancellationToken cancellationToken)
+    {
+        var method = handlerType.GetMethod("HandleAsync") ??
+            throw new InvalidOperationException($"Handler for {handlerType.Name} does not contain HandleAsync method");
+
+        var task = method.Invoke(handler, [request, cancellationToken]) ??
+            throw new InvalidOperationException($"Handler for {handlerType.Name}.HandleAsync invocation failed.");
+
+        return (Task)task!;
     }
 }
