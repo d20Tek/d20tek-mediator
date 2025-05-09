@@ -2,11 +2,8 @@
 
 namespace MemberService.Endpoints.Forecasts;
 
-internal class PokeForecastCommandHandler : ICommandHandlerAsync<PokeCommand>
+internal class PokeForecastCommandHandler : ICommandHandler<PokeCommand>
 {
-    public Task HandleAsync(PokeCommand command, CancellationToken cancellationToken)
-    {
-        Console.WriteLine("PokeForecastCommandHandler.HandleAsync was called.");
-        return Task.CompletedTask;
-    }
+    public void Handle(PokeCommand command) =>
+        Console.WriteLine("PokeForecastCommandHandler.Handle was called.");
 }

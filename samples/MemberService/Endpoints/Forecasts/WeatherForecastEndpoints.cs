@@ -7,11 +7,17 @@ internal static class WeatherForecastEndpoints
     public static void MapForecastEndpoints(this IEndpointRouteBuilder routes)
     {
         routes.MapGet("api/v1/async/weatherforecast", async (IMediator mediator, CancellationToken cancellationToken) =>
-            await mediator.SendAsync(new WeatherForecastCommand(), cancellationToken)
-        ).WithName("GetWeatherForecast");
+                await mediator.SendAsync(new WeatherForecastCommand(), cancellationToken)
+             ).WithName("GetWeatherForecastAsync");
 
         routes.MapGet("api/v1/async/weatherforecast/poke", async (IMediator mediator, CancellationToken cancellationToken) =>
-            await mediator.SendAsync(new PokeCommand(), cancellationToken)
-        ).WithName("PokeWeatherForecast");
+                await mediator.SendAsync(new PokeCommand(), cancellationToken)
+             ).WithName("PokeWeatherForecastAsync");
+
+        routes.MapGet("api/v1/weatherforecast", (IMediator mediator) => mediator.Send(new WeatherForecastCommand()))
+              .WithName("GetWeatherForecast");
+
+        routes.MapGet("api/v1/weatherforecast/poke", (IMediator mediator) => mediator.Send(new PokeCommand()))
+              .WithName("PokeWeatherForecast");
     }
 }

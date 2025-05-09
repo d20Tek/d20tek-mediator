@@ -9,8 +9,8 @@ internal static class DependencyInjection
     {
         // Add services to the container.
         builder.Services.AddMediator(typeof(DependencyInjection).Assembly);
-                        //.AddScoped<ICommandHandlerAsync<WeatherForecastCommand, WeatherForecast[]>, GetForecastCommandHandler>()
-                        //.AddScoped<ICommandHandlerAsync<PokeCommand>, PokeForecastCommandHandler>();
+                        //.AddScoped<ICommandHandlerAsync<WeatherForecastCommand, WeatherForecast[]>, GetForecastCommandHandlerAsync>()
+                        //.AddScoped<ICommandHandlerAsync<PokeCommand>, PokeForecastCommandHandlerAsync>();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();

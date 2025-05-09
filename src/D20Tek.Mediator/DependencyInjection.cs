@@ -43,7 +43,9 @@ public static class DependencyInjection
     private static readonly Type[] _handlerInterfaceTypes = 
     [
         typeof(ICommandHandlerAsync<,>),
-        typeof(ICommandHandlerAsync<>)
+        typeof(ICommandHandlerAsync<>),
+        typeof(ICommandHandler<,>),
+        typeof(ICommandHandler<>)
     ];
 
     private static IServiceCollection AddCommandHandlersFromAssembly(

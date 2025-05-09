@@ -19,7 +19,7 @@ internal partial class Mediator : IMediator
     {
         var handler = GetHandler(typeof(ICommandHandlerAsync<,>), command, typeof(TResponse));
         return (Task<TResponse>)InvokeHandler(
-            handler.Instance, handler.Type, _asyncFunc, [command, cancellationToken]);
+            handler.Instance, handler.Type, _asyncFunc, [command, cancellationToken])!;
     }
 
     public Task SendAsync<TCommand>(
@@ -28,20 +28,20 @@ internal partial class Mediator : IMediator
         where TCommand : ICommand
     {
         var handler = GetHandler(typeof(ICommandHandlerAsync<>), command);
-        return (Task)InvokeHandler(handler.Instance, handler.Type, _asyncFunc, [command, cancellationToken]);
+        return (Task)InvokeHandler(handler.Instance, handler.Type, _asyncFunc, [command, cancellationToken])!;
     }
 
     public TResponse Send<TResponse>(ICommand<TResponse> command)
     {
         var handler = GetHandler(typeof(ICommandHandler<,>), command, typeof(TResponse));
-        return (TResponse)InvokeHandler(handler.Instance, handler.Type, _syncFunc, [command]);
+        return (TResponse)InvokeHandler(handler.Instance, handler.Type, _syncFunc, [command])!;
     }
 
     public void Send<TCommand>(TCommand command)
         where TCommand : ICommand
     {
         var handler = GetHandler(typeof(ICommandHandler<>), command);
-        InvokeHandler(handler.Instance, handler.Type, _syncFunc, [command]);
+        InvokeHandler(handler.Instance, handler.Type, _syncFunc, [command], true);
     }
 
     private (object Instance, Type Type) GetHandler(Type typeInterface, object command, Type? typeResponse = null)
@@ -54,14 +54,16 @@ internal partial class Mediator : IMediator
         return (handler, handlerType);
     }
 
-    private static object InvokeHandler(object handler, Type handlerType, string methodName, object[] parameters)
+    private static object? InvokeHandler(
+        object handler, Type handlerType, string methodName, object[] parameters, bool voidExpected = false)
     {
         var method = handlerType.GetMethod(methodName)
             ?? throw new InvalidOperationException(
                 $"Handler for {handlerType.Name} does not contain {methodName} method");
 
-        var result = method.Invoke(handler, parameters)
-            ?? throw new InvalidOperationException($"Invocation of {handlerType.Name}.{methodName} returned null");
+        var result = method.Invoke(handler, parameters);
+        if (voidExpected is false && result is null)
+            throw new InvalidOperationException($"Invocation of {handlerType.Name}.{methodName} returned null");
 
         return result;
     }
