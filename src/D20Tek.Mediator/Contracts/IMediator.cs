@@ -6,4 +6,9 @@ public interface IMediator
 
     Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand;
+
+    TResponse Send<TResponse>(ICommand<TResponse> command);
+
+    void Send<TCommand>(TCommand command)
+        where TCommand : ICommand;
 }

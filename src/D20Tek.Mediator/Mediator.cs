@@ -2,8 +2,10 @@
 
 namespace D20Tek.Mediator;
 
-internal class Mediator : IMediator
+internal partial class Mediator : IMediator
 {
+    private const string _asyncFunc = "HandleAsync";
+    private const string _syncFunc = "Handle";
     private readonly IServiceProvider _provider;
 
     public Mediator(IServiceProvider provider)
@@ -15,12 +17,9 @@ internal class Mediator : IMediator
         ICommand<TResponse> command,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(command, nameof(command));
-
-        var handlerType = typeof(ICommandHandlerAsync<,>).MakeGenericType(command.GetType(), typeof(TResponse));
-        object handler = _provider.GetRequiredService(handlerType);
-
-        return InvokeHandlerAsync(handler, handlerType, command, cancellationToken);
+        var handler = GetHandler(typeof(ICommandHandlerAsync<,>), command, typeof(TResponse));
+        return (Task<TResponse>)InvokeHandler(
+            handler.Instance, handler.Type, _asyncFunc, [command, cancellationToken]);
     }
 
     public Task SendAsync<TCommand>(
@@ -28,35 +27,42 @@ internal class Mediator : IMediator
         CancellationToken cancellationToken = default)
         where TCommand : ICommand
     {
+        var handler = GetHandler(typeof(ICommandHandlerAsync<>), command);
+        return (Task)InvokeHandler(handler.Instance, handler.Type, _asyncFunc, [command, cancellationToken]);
+    }
+
+    public TResponse Send<TResponse>(ICommand<TResponse> command)
+    {
+        var handler = GetHandler(typeof(ICommandHandler<,>), command, typeof(TResponse));
+        return (TResponse)InvokeHandler(handler.Instance, handler.Type, _syncFunc, [command]);
+    }
+
+    public void Send<TCommand>(TCommand command)
+        where TCommand : ICommand
+    {
+        var handler = GetHandler(typeof(ICommandHandler<>), command);
+        InvokeHandler(handler.Instance, handler.Type, _syncFunc, [command]);
+    }
+
+    private (object Instance, Type Type) GetHandler(Type typeInterface, object command, Type? typeResponse = null)
+    {
         ArgumentNullException.ThrowIfNull(command, nameof(command));
-
-        var handlerType = typeof(ICommandHandlerAsync<>).MakeGenericType(command.GetType());
+        var handlerType = typeResponse is null ?
+                            typeInterface.MakeGenericType(command.GetType()) :
+                            typeInterface.MakeGenericType(command.GetType(), typeResponse);
         object handler = _provider.GetRequiredService(handlerType);
-
-        return InvokeHandlerAsync(handler, handlerType, command, cancellationToken);
+        return (handler, handlerType);
     }
 
-    private static Task<TResponse> InvokeHandlerAsync<TResponse>(
-        object handler, Type handlerType, ICommand<TResponse> command, CancellationToken cancellationToken)
+    private static object InvokeHandler(object handler, Type handlerType, string methodName, object[] parameters)
     {
-        var method = handlerType.GetMethod("HandleAsync") ??
-            throw new InvalidOperationException($"Handler for {handlerType.Name} does not contain HandleAsync method");
+        var method = handlerType.GetMethod(methodName)
+            ?? throw new InvalidOperationException(
+                $"Handler for {handlerType.Name} does not contain {methodName} method");
 
-        var task = method.Invoke(handler, [command, cancellationToken]) ??
-            throw new InvalidOperationException($"Handler for {handlerType.Name}.HandleAsync invocation failed.");
+        var result = method.Invoke(handler, parameters)
+            ?? throw new InvalidOperationException($"Invocation of {handlerType.Name}.{methodName} returned null");
 
-        return (Task<TResponse>)task!;
-    }
-
-    private static Task InvokeHandlerAsync(
-        object handler, Type handlerType, ICommand command, CancellationToken cancellationToken)
-    {
-        var method = handlerType.GetMethod("HandleAsync") ??
-            throw new InvalidOperationException($"Handler for {handlerType.Name} does not contain HandleAsync method");
-
-        var task = method.Invoke(handler, [command, cancellationToken]) ??
-            throw new InvalidOperationException($"Handler for {handlerType.Name}.HandleAsync invocation failed.");
-
-        return (Task)task!;
+        return result;
     }
 }
