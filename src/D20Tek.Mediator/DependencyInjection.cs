@@ -9,17 +9,21 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddMediator(
         this IServiceCollection services,
-        Assembly? assembly = null,
-        ServiceLifetime lifetime = ServiceLifetime.Scoped) =>
-        services.AddRequiredServices(lifetime)
-                .AddTypesForAssemblies(assembly is null ? [] : [assembly], lifetime);
-
-    public static IServiceCollection AddMediator(
-        this IServiceCollection services,
         Assembly[]? assemblies = null,
         ServiceLifetime lifetime = ServiceLifetime.Scoped) =>
         services.AddRequiredServices(lifetime)
                 .AddTypesForAssemblies(assemblies ?? [], lifetime);
+
+    public static IServiceCollection AddMediator(
+        this IServiceCollection services,
+        Assembly? assembly = null,
+        ServiceLifetime lifetime = ServiceLifetime.Scoped) =>
+        services.AddMediator(assembly is null ? [] : [assembly], lifetime);
+
+    public static IServiceCollection AddMediatorFor<T>(
+        this IServiceCollection services,
+        ServiceLifetime lifetime = ServiceLifetime.Scoped) =>
+        services.AddMediator([typeof(T).Assembly], lifetime);
 
     private static IServiceCollection AddRequiredServices(this IServiceCollection services, ServiceLifetime lifetime)
     {
