@@ -15,4 +15,8 @@
     <ProjectReference Include="..\..\src\D20Tek.Mediator\D20Tek.Mediator.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Endpoints\Members\" />
+  </ItemGroup>
+
 </Project>

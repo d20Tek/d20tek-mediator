@@ -1,36 +1,59 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using D20Tek.Functional;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
 
 namespace D20Tek.Mediator;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddMediator(this IServiceCollection services, Assembly? assembly = null)
-    {
-        services.AddScoped<IMediator, Mediator>();
-        if (assembly is not null)
-        {
-            services.AddRequestHandlersFromAssembly(assembly);
-        }
+    public static IServiceCollection AddMediator(
+        this IServiceCollection services,
+        Assembly? assembly = null,
+        ServiceLifetime lifetime = ServiceLifetime.Scoped) =>
+        services.AddRequiredServices(lifetime)
+                .AddTypesForAssemblies(assembly is null ? [] : [assembly], lifetime);
 
+    public static IServiceCollection AddMediator(
+        this IServiceCollection services,
+        Assembly[]? assemblies = null,
+        ServiceLifetime lifetime = ServiceLifetime.Scoped) =>
+        services.AddRequiredServices(lifetime)
+                .AddTypesForAssemblies(assemblies ?? [], lifetime);
+
+    private static IServiceCollection AddRequiredServices(this IServiceCollection services, ServiceLifetime lifetime)
+    {
+        services.TryAdd(new ServiceDescriptor(typeof(IMediator), typeof(Mediator), lifetime));
         return services;
     }
 
-    private static IServiceCollection AddRequestHandlersFromAssembly(this IServiceCollection services, Assembly assembly)
+    private static IServiceCollection AddTypesForAssemblies(
+        this IServiceCollection services,
+        Assembly[] assemblies,
+        ServiceLifetime lifetime)
     {
-        Type[] handlerInterfaceTypes = [typeof(IRequestHandlerAsync<,>), typeof(IRequestHandlerAsync<>)];
+        assemblies.ForEach(assembly => services.AddRequestHandlersFromAssembly(assembly, lifetime));
+        return services;
+    }
 
-        var handlerTypes = assembly
-            .GetTypes()
-            .Where(type => !type.IsAbstract && !type.IsInterface)
-            .SelectMany(type => type.GetInterfaces()
-                .Where(i => i.IsGenericType && handlerInterfaceTypes.Contains(i.GetGenericTypeDefinition()))
-                .Select(i => new { Interface = i, Implementation = type }));
+    private static readonly Type[] _handlerInterfaceTypes = 
+    [
+        typeof(IRequestHandlerAsync<,>),
+        typeof(IRequestHandlerAsync<>)
+    ];
 
-        foreach (var handler in handlerTypes)
-        {
-            services.AddScoped(handler.Interface, handler.Implementation);
-        }
+    private static IServiceCollection AddRequestHandlersFromAssembly(
+        this IServiceCollection services,
+        Assembly assembly,
+        ServiceLifetime lifetime)
+    {
+        assembly.GetTypes()
+                .Where(type => !type.IsAbstract && !type.IsInterface)
+                .SelectMany(type => type.GetInterfaces()
+                    .Where(i => i.IsGenericType && _handlerInterfaceTypes.Contains(i.GetGenericTypeDefinition()))
+                    .Select(i => new { Interface = i, Implementation = type }))
+                .ForEach(handler => services.TryAdd(
+                    new ServiceDescriptor(handler.Interface, handler.Implementation, lifetime)));
 
         return services;
     }
