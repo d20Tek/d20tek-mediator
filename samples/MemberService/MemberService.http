@@ -16,4 +16,8 @@ Accept: application/json
 GET {{MemberService_HostAddress}}/api/v1/weatherforecast/poke
 Accept: application/json
 
+### MemberService
+GET {{MemberService_HostAddress}}/api/v1/members/
+Accept: application/json
+
 ###

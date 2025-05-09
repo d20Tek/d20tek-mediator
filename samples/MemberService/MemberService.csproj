@@ -8,15 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="D20Tek.Functional.AspNetCore" Version="0.9.14" />
+    <PackageReference Include="LowDb.Net" Version="1.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\D20Tek.Mediator\D20Tek.Mediator.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Endpoints\Members\" />
   </ItemGroup>
 
 </Project>

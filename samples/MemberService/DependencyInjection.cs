@@ -1,13 +1,19 @@
-﻿using D20Tek.Mediator;
+﻿using D20Tek.LowDb;
+using D20Tek.Mediator;
 using MemberService.Endpoints.Forecasts;
+using MemberService.Endpoints.Members;
+using MemberService.Persistence;
 
 namespace MemberService;
 
 internal static class DependencyInjection
 {
+    public const string _databaseFile = "member-data.json";
+
     public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
     {
         // Add services to the container.
+        builder.Services.AddLowDbAsync<MemberDataStore>(_databaseFile);
         builder.Services.AddMediator(typeof(DependencyInjection).Assembly);
                         //.AddScoped<ICommandHandlerAsync<WeatherForecastCommand, WeatherForecast[]>, GetForecastCommandHandlerAsync>()
                         //.AddScoped<ICommandHandlerAsync<PokeCommand>, PokeForecastCommandHandlerAsync>();
@@ -29,7 +35,8 @@ internal static class DependencyInjection
         app.UseHttpsRedirection();
 
         // Map endpoints
-        app.MapForecastEndpoints();
+        app.MapMemberEndpoints()
+           .MapForecastEndpoints();
 
         return app;
     }
