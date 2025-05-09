@@ -2,11 +2,11 @@ using D20Tek.Mediator;
 
 namespace MemberService.Endpoints.Forecasts;
 
-internal record WeatherForecastRequest : IRequest<WeatherForecast[]>;
+internal record WeatherForecastCommand : ICommand<WeatherForecast[]>;
 
 internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
 
-internal record PokeRequest : IRequest;
+internal record PokeCommand : ICommand;

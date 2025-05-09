@@ -36,17 +36,17 @@ public static class DependencyInjection
         Assembly[] assemblies,
         ServiceLifetime lifetime)
     {
-        assemblies.ForEach(assembly => services.AddRequestHandlersFromAssembly(assembly, lifetime));
+        assemblies.ForEach(assembly => services.AddCommandHandlersFromAssembly(assembly, lifetime));
         return services;
     }
 
     private static readonly Type[] _handlerInterfaceTypes = 
     [
-        typeof(IRequestHandlerAsync<,>),
-        typeof(IRequestHandlerAsync<>)
+        typeof(ICommandHandlerAsync<,>),
+        typeof(ICommandHandlerAsync<>)
     ];
 
-    private static IServiceCollection AddRequestHandlersFromAssembly(
+    private static IServiceCollection AddCommandHandlersFromAssembly(
         this IServiceCollection services,
         Assembly assembly,
         ServiceLifetime lifetime)
