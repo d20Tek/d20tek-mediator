@@ -25,42 +25,8 @@ public static class DependencyInjection
         ServiceLifetime lifetime = ServiceLifetime.Scoped) =>
         services.AddMediator([typeof(T).Assembly], lifetime);
 
-    private static IServiceCollection AddRequiredServices(this IServiceCollection services, ServiceLifetime lifetime)
-    {
-        services.TryAdd(new ServiceDescriptor(typeof(IMediator), typeof(Mediator), lifetime));
-        return services;
-    }
-
-    private static IServiceCollection AddTypesForAssemblies(
+    private static IServiceCollection AddRequiredServices(
         this IServiceCollection services,
-        Assembly[] assemblies,
-        ServiceLifetime lifetime)
-    {
-        assemblies.ForEach(assembly => services.AddCommandHandlersFromAssembly(assembly, lifetime));
-        return services;
-    }
-
-    private static readonly Type[] _handlerInterfaceTypes = 
-    [
-        typeof(ICommandHandlerAsync<,>),
-        typeof(ICommandHandlerAsync<>),
-        typeof(ICommandHandler<,>),
-        typeof(ICommandHandler<>)
-    ];
-
-    private static IServiceCollection AddCommandHandlersFromAssembly(
-        this IServiceCollection services,
-        Assembly assembly,
-        ServiceLifetime lifetime)
-    {
-        assembly.GetTypes()
-                .Where(type => !type.IsAbstract && !type.IsInterface)
-                .SelectMany(type => type.GetInterfaces()
-                    .Where(i => i.IsGenericType && _handlerInterfaceTypes.Contains(i.GetGenericTypeDefinition()))
-                    .Select(i => new { Interface = i, Implementation = type }))
-                .ForEach(handler => services.TryAdd(
-                    new ServiceDescriptor(handler.Interface, handler.Implementation, lifetime)));
-
-        return services;
-    }
+        ServiceLifetime lifetime) =>
+        services.Pipe(s => s.TryAdd(new ServiceDescriptor(typeof(IMediator), typeof(Mediator), lifetime)));
 }
