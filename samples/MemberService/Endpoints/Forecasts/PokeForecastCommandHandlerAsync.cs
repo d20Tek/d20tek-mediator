@@ -2,7 +2,7 @@
 
 namespace MemberService.Endpoints.Forecasts;
 
-internal class PokeForecastCommandHandlerAsync : ICommandHandlerAsync<PokeCommand>
+internal sealed class PokeForecastCommandHandlerAsync : ICommandHandlerAsync<PokeCommand>
 {
     public Task HandleAsync(PokeCommand command, CancellationToken cancellationToken)
     {

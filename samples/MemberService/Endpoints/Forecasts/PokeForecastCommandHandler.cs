@@ -2,7 +2,7 @@
 
 namespace MemberService.Endpoints.Forecasts;
 
-internal class PokeForecastCommandHandler : ICommandHandler<PokeCommand>
+internal sealed class PokeForecastCommandHandler : ICommandHandler<PokeCommand>
 {
     public void Handle(PokeCommand command) =>
         Console.WriteLine("PokeForecastCommandHandler.Handle was called.");

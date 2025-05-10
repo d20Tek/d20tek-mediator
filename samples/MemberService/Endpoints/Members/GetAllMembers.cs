@@ -6,9 +6,9 @@ namespace MemberService.Endpoints.Members;
 
 internal sealed class GetAllMembers
 {
-    public record Command : ICommand<Result<MemberResponse[]>>;
+    public sealed record Command : ICommand<Result<MemberResponse[]>>;
 
-    public class Handler : ICommandHandlerAsync<Command, Result<MemberResponse[]>>
+    public sealed class Handler : ICommandHandlerAsync<Command, Result<MemberResponse[]>>
     {
         private readonly LowDbAsync<MemberDataStore> _db;
 

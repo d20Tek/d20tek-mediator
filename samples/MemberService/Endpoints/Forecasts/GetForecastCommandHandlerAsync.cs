@@ -2,7 +2,7 @@
 
 namespace MemberService.Endpoints.Forecasts;
 
-internal class GetForecastCommandHandlerAsync : ICommandHandlerAsync<WeatherForecastCommand, WeatherForecast[]>
+internal sealed class GetForecastCommandHandlerAsync : ICommandHandlerAsync<WeatherForecastCommand, WeatherForecast[]>
 {
     private static readonly string[] _summaries =
     [

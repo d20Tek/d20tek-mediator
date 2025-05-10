@@ -8,9 +8,10 @@ namespace MemberService.Endpoints.Members;
 
 internal sealed class CreateMember
 {
-    public record Command(string FirstName, string LastName, string Email) : ICommand<Result<MemberResponse>>;
+    public sealed record Command(string FirstName, string LastName, string Email)
+        : ICommand<Result<MemberResponse>>;
 
-    public class Handler : ICommandHandlerAsync<Command, Result<MemberResponse>>
+    public sealed class Handler : ICommandHandlerAsync<Command, Result<MemberResponse>>
     {
         private static Failure<MemberEntity> AlreadyExistsError(int id) =>
             Error.Conflict("MemberEntity.AlreadyExists", $"Entity with id={id} already exists.");
