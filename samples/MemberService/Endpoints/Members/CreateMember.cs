@@ -13,9 +13,6 @@ internal sealed class CreateMember
 
     public sealed class Handler : ICommandHandlerAsync<Command, Result<MemberResponse>>
     {
-        private static Failure<MemberEntity> AlreadyExistsError(int id) =>
-            Error.Conflict("MemberEntity.AlreadyExists", $"Entity with id={id} already exists.");
-
         private readonly LowDbAsync<MemberDataStore> _db;
 
         public Handler(LowDbAsync<MemberDataStore> db) => _db = db;
@@ -39,7 +36,7 @@ internal sealed class CreateMember
         {
             var newId = store.GetNextId();
             return store.Entities.Any(x => x.Id == newId) ? 
-                AlreadyExistsError(newId) : 
+                Errors.AlreadyExists(newId) : 
                 MemberEntity.Create(newId, command.FirstName, command.LastName, command.Email);
         }
 
@@ -55,10 +52,10 @@ internal sealed class CreateMember
     {
         public static Result<Command> Validate(Command command) =>
             ValidationErrors.Create()
-                .AddIfError(() => string.IsNullOrEmpty(command.FirstName), "Member.FirstName.Required", "Member first name is required.")
-                .AddIfError(() => string.IsNullOrEmpty(command.LastName), "Member.Last.Required", "Member last name is required.")
-                .AddIfError(() => string.IsNullOrEmpty(command.Email), "Member.Email.Required", "Member email is required.")
-                .AddIfError(() => !EmailValidator.IsValidFormat(command.Email), "Member.Email.Invalid", "Member email is not the expected format (name@company.com).")
+                .AddIfError(() => string.IsNullOrEmpty(command.FirstName), Errors.FirstNameRequired)
+                .AddIfError(() => string.IsNullOrEmpty(command.LastName), Errors.LastNameRequired)
+                .AddIfError(() => string.IsNullOrEmpty(command.Email), Errors.EmailRequired)
+                .AddIfError(() => !EmailValidator.IsValidFormat(command.Email), Errors.EmailInvalid)
                 .Map(() => command);
     }
 }

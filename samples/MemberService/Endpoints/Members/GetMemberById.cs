@@ -34,7 +34,7 @@ internal sealed class GetMemberById
     {
         public static Result<Command> Validate(Command command) =>
             ValidationErrors.Create()
-                .AddIfError(() => command.Id <= 0, "Member.Id", "Member id must be valid and greater than 0.")
+                .AddIfError(() => command.Id <= 0, Errors.IdInvalid)
                 .Map(() => command);
     }
 }

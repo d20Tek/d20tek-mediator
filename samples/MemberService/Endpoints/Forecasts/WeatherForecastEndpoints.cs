@@ -1,5 +1,4 @@
 ﻿using D20Tek.Mediator;
-using MemberService.Endpoints.Members;
 
 namespace MemberService.Endpoints.Forecasts;
 
@@ -7,13 +6,15 @@ internal static class WeatherForecastEndpoints
 {
     public static void MapForecastEndpoints(this IEndpointRouteBuilder routes)
     {
-        routes.MapGet("api/v1/async/weatherforecast", async (IMediator mediator, CancellationToken cancellationToken) =>
+        routes.MapGet("api/v1/async/weatherforecast",
+            async (IMediator mediator, CancellationToken cancellationToken) =>
                 await mediator.SendAsync(new WeatherForecastCommand(), cancellationToken))
               .Produces<WeatherForecast[]>()
               .WithName("GetWeatherForecastAsync")
               .WithTags("Weather Service");
 
-        routes.MapGet("api/v1/async/weatherforecast/poke", async (IMediator mediator, CancellationToken cancellationToken) =>
+        routes.MapGet("api/v1/async/weatherforecast/poke",
+            async (IMediator mediator, CancellationToken cancellationToken) =>
                 await mediator.SendAsync(new PokeCommand(), cancellationToken))
               .WithName("PokeWeatherForecastAsync")
               .WithTags("Weather Service");

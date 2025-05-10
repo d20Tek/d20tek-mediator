@@ -24,7 +24,7 @@ internal static class MemberEndpoints
                                .ToApiResultAsync())
              .Produces<MemberResponse>(StatusCodes.Status200OK)
              .ProducesProblem(StatusCodes.Status404NotFound)
-             .ProducesProblem(StatusCodes.Status400BadRequest)
+             .ProducesValidationProblem(StatusCodes.Status400BadRequest)
              .WithName("GetMemberById");
 
         group.MapPost("/",
@@ -35,7 +35,7 @@ internal static class MemberEndpoints
                                     e => Task.FromResult(TypedResults.Extensions.Problem(e))))
              .Produces<MemberResponse>(StatusCodes.Status201Created)
              .ProducesProblem(StatusCodes.Status409Conflict)
-             .ProducesProblem(StatusCodes.Status400BadRequest)
+             .ProducesValidationProblem(StatusCodes.Status400BadRequest)
              .WithName("CreateMember");
 
         group.MapPut("/{id:int}",
@@ -44,7 +44,7 @@ internal static class MemberEndpoints
                               .ToApiResultAsync())
              .Produces<MemberResponse>(StatusCodes.Status200OK)
              .ProducesProblem(StatusCodes.Status404NotFound)
-             .ProducesProblem(StatusCodes.Status400BadRequest)
+             .ProducesValidationProblem(StatusCodes.Status400BadRequest)
              .WithName("UpdateMember");
 
         group.MapDelete("/{id:int}", async ([FromServices] IMediator mediator, [FromRoute] int id) =>
@@ -52,7 +52,7 @@ internal static class MemberEndpoints
                                .ToApiResultAsync())
              .Produces<MemberResponse>(StatusCodes.Status200OK)
              .ProducesProblem(StatusCodes.Status404NotFound)
-             .ProducesProblem(StatusCodes.Status400BadRequest)
+             .ProducesValidationProblem(StatusCodes.Status400BadRequest)
              .WithName("DeleteMember");
 
         return routes;

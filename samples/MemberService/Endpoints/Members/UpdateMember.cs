@@ -48,11 +48,11 @@ internal sealed class UpdateMember
     {
         public static Result<Command> Validate(Command command) =>
             ValidationErrors.Create()
-                .AddIfError(() => command.Id <= 0, "Member.Id", "Member id must be valid and greater than 0.")
-                .AddIfError(() => string.IsNullOrEmpty(command.FirstName), "Member.FirstName.Required", "Member first name is required.")
-                .AddIfError(() => string.IsNullOrEmpty(command.LastName), "Member.Last.Required", "Member last name is required.")
-                .AddIfError(() => string.IsNullOrEmpty(command.Email), "Member.Email.Required", "Member email is required.")
-                .AddIfError(() => !EmailValidator.IsValidFormat(command.Email), "Member.Email.Invalid", "Member email is not the expected format (name@company.com).")
+                .AddIfError(() => command.Id <= 0, Errors.IdInvalid)
+                .AddIfError(() => string.IsNullOrEmpty(command.FirstName), Errors.FirstNameRequired)
+                .AddIfError(() => string.IsNullOrEmpty(command.LastName), Errors.LastNameRequired)
+                .AddIfError(() => string.IsNullOrEmpty(command.Email), Errors.EmailRequired)
+                .AddIfError(() => !EmailValidator.IsValidFormat(command.Email), Errors.EmailInvalid)
                 .Map(() => command);
     }
 }
