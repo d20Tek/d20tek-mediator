@@ -25,6 +25,14 @@ internal static class MemberEndpoints
              .ProducesValidationProblem(StatusCodes.Status400BadRequest)
              .WithName("GetMemberById");
 
+        group.MapGet("/email/{email}", async ([FromServices] IMediator mediator, [FromRoute] string email) =>
+                 await mediator.SendAsync(new GetMemberByEmail.Command(email))
+                               .ToApiResultAsync())
+             .Produces<MemberResponse>(StatusCodes.Status200OK)
+             .ProducesProblem(StatusCodes.Status404NotFound)
+             .ProducesValidationProblem(StatusCodes.Status400BadRequest)
+             .WithName("GetMemberByEmail");
+
         group.MapPost("/",
             async ([FromServices] IMediator mediator, [FromBody] CreateMemberRequest request) =>
                 await mediator.SendAsync(request.Map())

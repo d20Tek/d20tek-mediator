@@ -8,6 +8,10 @@ GET {{MemberService_HostAddress}}/api/v1/members/4
 Accept: application/json
 
 ###
+GET {{MemberService_HostAddress}}/api/v1/members/email/foo@bar.com
+Accept: application/json
+
+###
 POST {{MemberService_HostAddress}}/api/v1/members/
 Accept: application/json
 Content-Type: application/json 
