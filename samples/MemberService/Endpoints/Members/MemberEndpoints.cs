@@ -11,10 +11,18 @@ internal static class MemberEndpoints
     public static IEndpointRouteBuilder MapMemberEndpoints(this IEndpointRouteBuilder routes)
     {
         routes.MapGet("api/v1/members", async (IMediator mediator) =>
-                    await mediator.SendAsync(new GetAllMembers.Command())
-                                  .ToApiResultAsync())
+                 await mediator.SendAsync(new GetAllMembers.Command())
+                                .ToApiResultAsync())
               .Produces<MemberResponse[]>()
               .WithName("GetAllMembers");
+
+        routes.MapGet("api/v1/members/{id:int}", async ([FromServices] IMediator mediator, [FromRoute] int id) =>
+                 await mediator.SendAsync(new GetMemberById.Command(id))
+                               .ToApiResultAsync())
+            .Produces<MemberResponse>(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .WithName("GetMemberById");
 
         routes.MapPost("api/v1/members",
             async ([FromServices] IMediator mediator, [FromBody] CreateMemberRequest request) =>
@@ -27,10 +35,12 @@ internal static class MemberEndpoints
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithName("CreateMember");
 
-        routes.MapDelete("api/v1/members/{id:int}", 
-            async ([FromServices] IMediator mediator, [FromRoute] int id) =>
+        routes.MapDelete("api/v1/members/{id:int}", async ([FromServices] IMediator mediator, [FromRoute] int id) =>
                  await mediator.SendAsync(new DeleteMember.Command(id))
                                .ToApiResultAsync())
+            .Produces<MemberResponse>(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithName("DeleteMember");
 
         return routes;

@@ -1,0 +1,19 @@
+@MemberService_HostAddress = http://localhost:5121
+
+### Async WebApi
+GET {{MemberService_HostAddress}}/api/v1/async/weatherforecast/
+Accept: application/json
+
+###
+GET {{MemberService_HostAddress}}/api/v1/async/weatherforecast/poke
+Accept: application/json
+
+### Sync WebApi
+GET {{MemberService_HostAddress}}/api/v1/weatherforecast/
+Accept: application/json
+
+###
+GET {{MemberService_HostAddress}}/api/v1/weatherforecast/poke
+Accept: application/json
+
+###
