@@ -18,7 +18,7 @@ internal sealed class GetMemberByEmail
             {
                 var store = await _db.Get();
                 return Validator.Validate(command)
-                                .Bind(c => store.GetEntityByEmail(command.Email))
+                                .Bind(c => GetEntityByEmail(command.Email, store))
                                 .Map(entity => MemberResponse.Map(entity));
             }
             catch (Exception ex)
@@ -26,6 +26,9 @@ internal sealed class GetMemberByEmail
                 return Result<MemberResponse>.Failure(ex);
             }
         }
+
+        public Result<MemberEntity> GetEntityByEmail(string email, MemberDataStore store) =>
+            store.Entities.FirstOrDefault(p => p.Email == email) ?? Errors.EmailNotFound(email);
     }
 
     public static class Validator

@@ -5,6 +5,10 @@ public static class Errors
     public static Failure<MemberEntity> AlreadyExists(int id) =>
         Error.Conflict("MemberEntity.AlreadyExists", $"Entity with id={id} already exists.");
 
+    public static Result<MemberEntity> EmailNotFound(string email) =>
+        Result<MemberEntity>.Failure(
+            Error.NotFound("MemberEntity.NotFound", $"Member entity with email={email} was not found."));
+
     public static Error FirstNameRequired =
         Error.Validation("Member.FirstName.Required", "Member first name is required.");
 
