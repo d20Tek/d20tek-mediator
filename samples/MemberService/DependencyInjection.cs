@@ -2,6 +2,7 @@
 using D20Tek.Mediator;
 using MemberService.Endpoints.Forecasts;
 using MemberService.Endpoints.Members;
+using Scalar.AspNetCore;
 
 namespace MemberService;
 
@@ -29,6 +30,7 @@ internal static class DependencyInjection
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.MapScalarApiReference();
         }
 
         app.UseHttpsRedirection();

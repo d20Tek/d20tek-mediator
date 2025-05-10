@@ -10,47 +10,50 @@ internal static class MemberEndpoints
 {
     public static IEndpointRouteBuilder MapMemberEndpoints(this IEndpointRouteBuilder routes)
     {
-        routes.MapGet("api/v1/members", async (IMediator mediator) =>
+        var group = routes.MapGroup("api/v1/members")
+                          .WithTags("Member Service");
+
+        group.MapGet("/", async (IMediator mediator) =>
                  await mediator.SendAsync(new GetAllMembers.Command())
                                 .ToApiResultAsync())
-              .Produces<MemberResponse[]>()
-              .WithName("GetAllMembers");
+             .Produces<MemberResponse[]>()
+             .WithName("GetAllMembers");
 
-        routes.MapGet("api/v1/members/{id:int}", async ([FromServices] IMediator mediator, [FromRoute] int id) =>
+        group.MapGet("/{id:int}", async ([FromServices] IMediator mediator, [FromRoute] int id) =>
                  await mediator.SendAsync(new GetMemberById.Command(id))
                                .ToApiResultAsync())
-            .Produces<MemberResponse>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status404NotFound)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .WithName("GetMemberById");
+             .Produces<MemberResponse>(StatusCodes.Status200OK)
+             .ProducesProblem(StatusCodes.Status404NotFound)
+             .ProducesProblem(StatusCodes.Status400BadRequest)
+             .WithName("GetMemberById");
 
-        routes.MapPost("api/v1/members",
+        group.MapPost("/",
             async ([FromServices] IMediator mediator, [FromBody] CreateMemberRequest request) =>
                 await mediator.SendAsync(request.Map())
                               .MatchAsync(
                                     s => Task.FromResult(Results.Created($"api/v1/members/{s.Id}", s)),
                                     e => Task.FromResult(TypedResults.Extensions.Problem(e))))
-            .Produces<MemberResponse>(StatusCodes.Status201Created)
-            .ProducesProblem(StatusCodes.Status409Conflict)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .WithName("CreateMember");
+             .Produces<MemberResponse>(StatusCodes.Status201Created)
+             .ProducesProblem(StatusCodes.Status409Conflict)
+             .ProducesProblem(StatusCodes.Status400BadRequest)
+             .WithName("CreateMember");
 
-        routes.MapPut("api/v1/members/{id:int}",
+        group.MapPut("/{id:int}",
             async ([FromServices] IMediator mediator, [FromBody] UpdateMemberRequest request, [FromRoute] int id) =>
                 await mediator.SendAsync(request.Map(id))
                               .ToApiResultAsync())
-            .Produces<MemberResponse>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status404NotFound)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .WithName("UpdateMember");
+             .Produces<MemberResponse>(StatusCodes.Status200OK)
+             .ProducesProblem(StatusCodes.Status404NotFound)
+             .ProducesProblem(StatusCodes.Status400BadRequest)
+             .WithName("UpdateMember");
 
-        routes.MapDelete("api/v1/members/{id:int}", async ([FromServices] IMediator mediator, [FromRoute] int id) =>
+        group.MapDelete("/{id:int}", async ([FromServices] IMediator mediator, [FromRoute] int id) =>
                  await mediator.SendAsync(new DeleteMember.Command(id))
                                .ToApiResultAsync())
-            .Produces<MemberResponse>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status404NotFound)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .WithName("DeleteMember");
+             .Produces<MemberResponse>(StatusCodes.Status200OK)
+             .ProducesProblem(StatusCodes.Status404NotFound)
+             .ProducesProblem(StatusCodes.Status400BadRequest)
+             .WithName("DeleteMember");
 
         return routes;
     }
