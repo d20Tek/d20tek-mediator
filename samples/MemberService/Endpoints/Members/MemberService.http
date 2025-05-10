@@ -18,18 +18,18 @@ Content-Type: application/json
 }
 
 ###
-PUT {{MemberService_HostAddress}}/api/v1/members/7
+PUT {{MemberService_HostAddress}}/api/v1/members/10
 Accept: application/json
 Content-Type: application/json 
 {
-  "id": 7,
-  "firstName": "Joe3",
-  "lastName": "Tester3",
-  "email": "joe3@test.com"
+  "id": 10,
+  "firstName": "Joe2",
+  "lastName": "Tester2",
+  "email": "joe2@test.com"
 }
 
 ###
-DELETE {{MemberService_HostAddress}}/api/v1/members/8
+DELETE {{MemberService_HostAddress}}/api/v1/members/10
 Accept: application/json
 
 ###

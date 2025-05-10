@@ -1,7 +1,5 @@
 ﻿using D20Tek.Functional.AspNetCore.MinimalApi;
 using D20Tek.Functional.AspNetCore.MinimalApi.Async;
-using D20Tek.Functional.Async;
-using D20Tek.Mediator;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MemberService.Endpoints.Members;

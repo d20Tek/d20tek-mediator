@@ -1,6 +1,4 @@
-﻿using D20Tek.Functional;
-
-namespace MemberService.Endpoints.Members;
+﻿namespace MemberService.Endpoints.Members;
 
 public static class Errors
 {

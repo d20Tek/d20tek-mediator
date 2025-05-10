@@ -1,7 +1,4 @@
-﻿using D20Tek.Functional;
-using D20Tek.Functional.Async;
-using D20Tek.LowDb;
-using D20Tek.Mediator;
+﻿using MemberService.Common;
 
 namespace MemberService.Endpoints.Members;
 
@@ -11,9 +8,9 @@ internal sealed class DeleteMember
 
     public sealed class Handler : ICommandHandlerAsync<Command, Result<MemberResponse>>
     {
-        private readonly LowDbAsync<MemberDataStore> _db;
+        private readonly IMemberDb _db;
 
-        public Handler(LowDbAsync<MemberDataStore> db) => _db = db;
+        public Handler(IMemberDb db) => _db = db;
 
         public async Task<Result<MemberResponse>> HandleAsync(Command command, CancellationToken cancellationToken)
         {

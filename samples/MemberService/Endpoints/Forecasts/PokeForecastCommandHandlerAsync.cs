@@ -1,6 +1,4 @@
-﻿using D20Tek.Mediator;
-
-namespace MemberService.Endpoints.Forecasts;
+﻿namespace MemberService.Endpoints.Forecasts;
 
 internal sealed class PokeForecastCommandHandlerAsync : ICommandHandlerAsync<PokeCommand>
 {

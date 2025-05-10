@@ -1,5 +1,4 @@
-﻿using D20Tek.Functional;
-using MemberService.Endpoints.Members;
+﻿using MemberService.Endpoints.Members;
 
 namespace MemberService;
 

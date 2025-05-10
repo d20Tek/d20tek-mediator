@@ -1,5 +1,3 @@
-using D20Tek.Mediator;
-
 namespace MemberService.Endpoints.Forecasts;
 
 internal sealed record WeatherForecastCommand : ICommand<WeatherForecast[]>;
