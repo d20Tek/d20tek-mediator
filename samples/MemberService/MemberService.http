@@ -21,3 +21,13 @@ GET {{MemberService_HostAddress}}/api/v1/members/
 Accept: application/json
 
 ###
+POST {{MemberService_HostAddress}}/api/v1/members/
+Accept: application/json
+Content-Type: application/json 
+{
+  "firstName": "Joe",
+  "lastName": "Tester",
+  "email": "foo@bar.com"
+}
+
+###

@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="member-data.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="D20Tek.Functional.AspNetCore" Version="0.9.14" />
     <PackageReference Include="LowDb.Net" Version="1.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />

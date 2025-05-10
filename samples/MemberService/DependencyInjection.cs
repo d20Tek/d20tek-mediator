@@ -2,7 +2,6 @@
 using D20Tek.Mediator;
 using MemberService.Endpoints.Forecasts;
 using MemberService.Endpoints.Members;
-using MemberService.Persistence;
 
 namespace MemberService;
 

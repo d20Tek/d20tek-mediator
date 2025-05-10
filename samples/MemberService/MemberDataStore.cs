@@ -1,6 +1,6 @@
 ﻿using MemberService.Endpoints.Members;
 
-namespace MemberService.Persistence;
+namespace MemberService;
 
 internal sealed class MemberDataStore
 {

@@ -1,13 +1,12 @@
 ﻿using D20Tek.Functional;
 using D20Tek.LowDb;
 using D20Tek.Mediator;
-using MemberService.Persistence;
 
 namespace MemberService.Endpoints.Members;
 
 internal sealed class GetAllMembers
 {
-    public class Command : ICommand<Result<MemberResponse[]>>;
+    public record Command : ICommand<Result<MemberResponse[]>>;
 
     public class Handler : ICommandHandlerAsync<Command, Result<MemberResponse[]>>
     {
@@ -15,7 +14,7 @@ internal sealed class GetAllMembers
 
         public Handler(LowDbAsync<MemberDataStore> db) => _db = db;
 
-        public async Task<Result<MemberResponse[]>> HandleAsync(Command request, CancellationToken cancellationToken)
+        public async Task<Result<MemberResponse[]>> HandleAsync(Command command, CancellationToken cancellationToken)
         {
             try
             {
