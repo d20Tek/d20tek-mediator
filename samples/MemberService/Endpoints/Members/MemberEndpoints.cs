@@ -22,8 +22,16 @@ internal static class MemberEndpoints
                               .MatchAsync(
                                     s => Task.FromResult(Results.Created($"api/v1/members/{s.Id}", s)),
                                     e => Task.FromResult(TypedResults.Extensions.Problem(e))))
-            .Produces<MemberResponse>()
+            .Produces<MemberResponse>(StatusCodes.Status201Created)
+            .ProducesProblem(StatusCodes.Status409Conflict)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithName("CreateMember");
+
+        routes.MapDelete("api/v1/members/{id:int}", 
+            async ([FromServices] IMediator mediator, [FromRoute] int id) =>
+                 await mediator.SendAsync(new DeleteMember.Command(id))
+                               .ToApiResultAsync())
+            .WithName("DeleteMember");
 
         return routes;
     }

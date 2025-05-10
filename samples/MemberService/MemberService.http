@@ -31,3 +31,7 @@ Content-Type: application/json
 }
 
 ###
+DELETE {{MemberService_HostAddress}}/api/v1/members/0
+Accept: application/json
+
+###
