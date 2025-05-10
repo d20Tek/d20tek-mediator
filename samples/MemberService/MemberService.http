@@ -4,7 +4,7 @@ GET {{MemberService_HostAddress}}/api/v1/members/
 Accept: application/json
 
 ###
-GET {{MemberService_HostAddress}}/api/v1/members/4
+GET {{MemberService_HostAddress}}/api/v1/members/
 Accept: application/json
 
 ###
@@ -18,7 +18,18 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{MemberService_HostAddress}}/api/v1/members/6
+PUT {{MemberService_HostAddress}}/api/v1/members/7
+Accept: application/json
+Content-Type: application/json 
+{
+  "id": 7,
+  "firstName": "Joe3",
+  "lastName": "Tester3",
+  "email": "joe3@test.com"
+}
+
+###
+DELETE {{MemberService_HostAddress}}/api/v1/members/7
 Accept: application/json
 
 ###

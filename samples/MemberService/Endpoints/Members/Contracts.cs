@@ -12,3 +12,8 @@ internal sealed record CreateMemberRequest(string FirstName, string LastName, st
     public CreateMember.Command Map() => new(FirstName, LastName, Email);
 }
 
+internal sealed record UpdateMemberRequest(int Id, string FirstName, string LastName, string Email)
+{
+    public UpdateMember.Command Map(int id) => new(id, FirstName, LastName, Email);
+}
+

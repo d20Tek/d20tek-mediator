@@ -35,6 +35,15 @@ internal static class MemberEndpoints
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithName("CreateMember");
 
+        routes.MapPut("api/v1/members/{id:int}",
+            async ([FromServices] IMediator mediator, [FromBody] UpdateMemberRequest request, [FromRoute] int id) =>
+                await mediator.SendAsync(request.Map(id))
+                              .ToApiResultAsync())
+            .Produces<MemberResponse>(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .WithName("UpdateMember");
+
         routes.MapDelete("api/v1/members/{id:int}", async ([FromServices] IMediator mediator, [FromRoute] int id) =>
                  await mediator.SendAsync(new DeleteMember.Command(id))
                                .ToApiResultAsync())
