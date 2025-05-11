@@ -1,5 +1,5 @@
 ﻿using D20Tek.Mediator.UnitTests.Commands;
-using Microsoft.Extensions.DependencyInjection;
+using D20Tek.Mediator.UnitTests.Mocks;
 
 namespace D20Tek.Mediator.UnitTests;
 
@@ -10,7 +10,7 @@ public sealed class MediatorTests
     public async Task SendAsync_WithCommandResponse_ReturnsSuccess()
     {
         // arrange
-        var provider = CreateServiceProvideWith(
+        var provider = ServiceProviderFactory.CreateWith(
                         typeof(ICommandHandlerAsync<AsyncWithResponse.Command, AsyncWithResponse.Response>),
                         typeof(AsyncWithResponse.Handler));
         var mediator = new Mediator(provider);
@@ -26,7 +26,7 @@ public sealed class MediatorTests
     public async Task SendAsync_WithCommandResponse_ReturnsFailed()
     {
         // arrange
-        var provider = CreateServiceProvideWith(
+        var provider = ServiceProviderFactory.CreateWith(
                         typeof(ICommandHandlerAsync<AsyncWithResponse.Command, AsyncWithResponse.Response>),
                         typeof(AsyncWithResponse.Handler));
         var mediator = new Mediator(provider);
@@ -42,7 +42,7 @@ public sealed class MediatorTests
     public async Task SendAsync_WithCommandNoResponse_ReturnsTask()
     {
         // arrange
-        var provider = CreateServiceProvideWith(
+        var provider = ServiceProviderFactory.CreateWith(
                         typeof(ICommandHandlerAsync<AsyncWithNoResponse.Command>),
                         typeof(AsyncWithNoResponse.Handler));
         var mediator = new Mediator(provider);
@@ -56,11 +56,48 @@ public sealed class MediatorTests
         Assert.IsTrue(task.IsCompleted);
     }
 
-    private IServiceProvider CreateServiceProvideWith(Type service, Type implementation)
+    [TestMethod]
+    public void Send_WithCommandResponse_ReturnsSuccess()
     {
-        var services = new ServiceCollection();
-        services.AddScoped(service, implementation);
+        // arrange
+        var provider = ServiceProviderFactory.CreateWith(
+                        typeof(ICommandHandler<SyncWithResponse.Command, SyncWithResponse.Response>),
+                        typeof(SyncWithResponse.Handler));
+        var mediator = new Mediator(provider);
 
-        return services.BuildServiceProvider();
+        // act
+        var result = mediator.Send(new SyncWithResponse.Command(true));
+
+        // assert
+        Assert.AreEqual("success", result.Value);
+    }
+
+    [TestMethod]
+    public void Send_WithCommandResponse_ReturnsFailed()
+    {
+        // arrange
+        var provider = ServiceProviderFactory.CreateWith(
+                        typeof(ICommandHandler<SyncWithResponse.Command, SyncWithResponse.Response>),
+                        typeof(SyncWithResponse.Handler));
+        var mediator = new Mediator(provider);
+
+        // act
+        var result = mediator.Send(new SyncWithResponse.Command(false));
+
+        // assert
+        Assert.AreEqual("failed", result.Value);
+    }
+
+    [TestMethod]
+    public void Send_WithCommandNoResponse_ReturnsTask()
+    {
+        // arrange
+        var provider = ServiceProviderFactory.CreateWith(
+                        typeof(ICommandHandler<SyncWithNoResponse.Command>),
+                        typeof(SyncWithNoResponse.Handler));
+        var mediator = new Mediator(provider);
+
+        // act
+        mediator.Send(new SyncWithNoResponse.Command());
     }
 }

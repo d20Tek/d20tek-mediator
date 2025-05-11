@@ -54,7 +54,7 @@ public class Mediator : IMediator
         return (handler, handlerType);
     }
 
-    private static object? InvokeHandler(
+    internal static object? InvokeHandler(
         object handler, Type handlerType, string methodName, object[] parameters, bool voidExpected = false)
     {
         var method = handlerType.GetMethod(methodName)
