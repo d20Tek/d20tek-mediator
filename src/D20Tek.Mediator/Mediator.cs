@@ -2,7 +2,7 @@
 
 namespace D20Tek.Mediator;
 
-internal partial class Mediator : IMediator
+public class Mediator : IMediator
 {
     private const string _asyncFunc = "HandleAsync";
     private const string _syncFunc = "Handle";

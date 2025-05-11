@@ -1,13 +1,13 @@
 ﻿namespace D20Tek.Mediator;
 
-public interface ICommandHandler<in TRequest, TResponse>
-    where TRequest : ICommand<TResponse>
+public interface ICommandHandler<in TCommand, TResponse>
+    where TCommand : ICommand<TResponse>
 {
-    TResponse Handle(TRequest request);
+    TResponse Handle(TCommand command);
 }
 
-public interface ICommandHandler<in TRequest>
-    where TRequest : ICommand
+public interface ICommandHandler<in TCommand>
+    where TCommand : ICommand
 {
-    void Handle(TRequest request);
+    void Handle(TCommand command);
 }

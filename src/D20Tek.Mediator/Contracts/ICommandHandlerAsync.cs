@@ -1,13 +1,13 @@
 ﻿namespace D20Tek.Mediator;
 
-public interface ICommandHandlerAsync<in TRequest, TResponse>
-    where TRequest : ICommand<TResponse>
+public interface ICommandHandlerAsync<in TCommand, TResponse>
+    where TCommand : ICommand<TResponse>
 {
-    Task<TResponse> HandleAsync(TRequest request, CancellationToken cancellationToken);
+    Task<TResponse> HandleAsync(TCommand command, CancellationToken cancellationToken);
 }
 
-public interface ICommandHandlerAsync<in TRequest>
-    where TRequest : ICommand
+public interface ICommandHandlerAsync<in TCommand>
+    where TCommand : ICommand
 {
-    Task HandleAsync(TRequest request, CancellationToken cancellationToken);
+    Task HandleAsync(TCommand command, CancellationToken cancellationToken);
 }

@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{02EA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemberService", "samples\MemberService\MemberService.csproj", "{0B1060DA-F814-4521-A9D7-D85386681E85}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D20Tek.Mediator.UnitTests", "tests\D20Tek.Mediator.UnitTests\D20Tek.Mediator.UnitTests.csproj", "{8E27AC41-7C8D-4711-BAE1-9ED9A88CAA68}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{0B1060DA-F814-4521-A9D7-D85386681E85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B1060DA-F814-4521-A9D7-D85386681E85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B1060DA-F814-4521-A9D7-D85386681E85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E27AC41-7C8D-4711-BAE1-9ED9A88CAA68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E27AC41-7C8D-4711-BAE1-9ED9A88CAA68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E27AC41-7C8D-4711-BAE1-9ED9A88CAA68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E27AC41-7C8D-4711-BAE1-9ED9A88CAA68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
