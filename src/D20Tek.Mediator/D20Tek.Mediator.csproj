@@ -4,7 +4,25 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>d20Tek Mediator</Title>
+    <Authors>DarthPedro</Authors>
+    <Company>d20Tek</Company>
+    <Copyright>Copyright (c) d20Tek.  All rights reserved.</Copyright>
+    <Description>A minimal implementation of the Mediator pattern that can be used in any .NET project, with particular focus on usage in WebApi</Description>
+    <PackageProjectUrl>https://github.com/d20Tek/d20tek-mediator</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/d20Tek/d20tek-mediator</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Mediator; mediator pattern; command pattern; Command; CQRS; vertical slice; DDD; domain driven development</PackageTags>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="D20Tek.Functional" Version="0.9.14" />
