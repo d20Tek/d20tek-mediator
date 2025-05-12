@@ -1,6 +1,4 @@
-﻿using D20Tek.Functional;
-
-namespace TipCalc.Cli.Common;
+﻿namespace TipCalc.Cli.Common;
 
 internal static class Constants
 {
@@ -17,7 +15,8 @@ internal static class Constants
     public static readonly ValueRange<decimal> TipperCountRange = new(1, 20);
     public const string TipperCountRangeError = "Number of tippers must be between 1-20.";
 
-    //public static int ToResultCode(this Result<TipResponse> result) => result.IsSuccess ? 0 : -1;
+    public static int ToResultCode<T>(this Result<T> result) where T : notnull =>
+        result.IsSuccess ? 0 : -1;
 
     public const int ColumnNameLen = 24;
     public const int ColumnAmountsLen = 10;

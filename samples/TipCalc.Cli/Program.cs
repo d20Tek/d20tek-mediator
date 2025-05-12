@@ -8,7 +8,7 @@ using TipCalc.Cli;
 
 using var host = CreateAppHost(args);
 var app = host.Services.GetRequiredService<App>();
-app.Run();
+return app.Run();
 
 static IHost CreateAppHost(string[] args) =>
     Host.CreateDefaultBuilder(args)
