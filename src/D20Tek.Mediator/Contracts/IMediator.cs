@@ -11,4 +11,10 @@ public interface IMediator
 
     void Send<TCommand>(TCommand command)
         where TCommand : ICommand;
+
+    Task NotifyAsync<TNotification>(TNotification notification, CancellationToken cancellationToken)
+        where TNotification : INotification;
+
+    void Notify<TNotification>(TNotification notification)
+        where TNotification : INotification;
 }

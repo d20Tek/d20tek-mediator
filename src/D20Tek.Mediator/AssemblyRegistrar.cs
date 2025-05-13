@@ -12,7 +12,9 @@ internal static class AssemblyRegistrar
         typeof(ICommandHandlerAsync<,>),
         typeof(ICommandHandlerAsync<>),
         typeof(ICommandHandler<,>),
-        typeof(ICommandHandler<>)
+        typeof(ICommandHandler<>),
+        typeof(INotificationHandlerAsync<>),
+        typeof(INotificationHandler<>)
     ];
 
     internal static IServiceCollection AddTypesForAssemblies(

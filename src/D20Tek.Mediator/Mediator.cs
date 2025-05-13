@@ -44,6 +44,20 @@ public class Mediator : IMediator
         InvokeHandler(handler.Instance, handler.Type, _syncFunc, [command], true);
     }
 
+    public Task NotifyAsync<TNotification>(TNotification notification, CancellationToken cancellationToken)
+        where TNotification : INotification
+    {
+        var handler = GetHandler(typeof(INotificationHandlerAsync<>), notification);
+        return (Task)InvokeHandler(handler.Instance, handler.Type, _asyncFunc, [notification, cancellationToken])!;
+    }
+
+    public void Notify<TNotification>(TNotification notification)
+        where TNotification : INotification
+    {
+        var handler = GetHandler(typeof(INotificationHandler<>), notification);
+        InvokeHandler(handler.Instance, handler.Type, _syncFunc, [notification], true);
+    }
+
     private (object Instance, Type Type) GetHandler(Type typeInterface, object command, Type? typeResponse = null)
     {
         ArgumentNullException.ThrowIfNull(command, nameof(command));
