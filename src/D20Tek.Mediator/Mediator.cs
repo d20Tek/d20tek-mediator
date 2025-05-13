@@ -53,7 +53,7 @@ public partial class Mediator : IMediator
 
     public void Notify<TNotification>(TNotification notification) where TNotification : INotification
     {
-        var (handlers, type) = GetMultipleHandlers(typeof(INotificationHandlerAsync<>), notification);
+        var (handlers, type) = GetMultipleHandlers(typeof(INotificationHandler<>), notification);
         foreach (var handler in handlers)
         {
             InvokeHandler(handler, type, _syncFunc, [notification], true);
