@@ -18,11 +18,12 @@ Content-Type: application/json
 {
   "firstName": "Joe",
   "lastName": "Tester",
-  "email": "foo@bar.com"
+  "email": "foo@bar.com",
+  "cellPhone": "555-5555"
 }
 
 ###
-PUT {{MemberService_HostAddress}}/api/v1/members/10
+PUT {{MemberService_HostAddress}}/api/v1/members/22
 Accept: application/json
 Content-Type: application/json 
 {
@@ -33,7 +34,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{MemberService_HostAddress}}/api/v1/members/11
+DELETE {{MemberService_HostAddress}}/api/v1/members/23
 Accept: application/json
 
 ###
