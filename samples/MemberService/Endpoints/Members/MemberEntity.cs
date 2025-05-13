@@ -10,18 +10,21 @@ public sealed class MemberEntity
 
     public string Email { get; }
 
-    public MemberEntity(int id, string firstName, string lastName, string email)
+    public string? CellPhone { get; }
+
+    public MemberEntity(int id, string firstName, string lastName, string email, string? cellPhone = null)
     {
         Id = id;
         FirstName = firstName;
         LastName = lastName;
         Email = email;
+        CellPhone = cellPhone;
     }
 
     public void SetId(int id) => Id = id;
 
-    public static MemberEntity Create(int id, string firstName, string lastName, string email) =>
-        new(id, firstName, lastName, email);
+    public static MemberEntity Create(int id, string firstName, string lastName, string email, string? cellPhone = null) =>
+        new(id, firstName, lastName, email, cellPhone);
 
     public static MemberEntity Default => new(0, string.Empty, string.Empty, string.Empty);
 }

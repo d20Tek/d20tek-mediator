@@ -3,11 +3,12 @@
 ## Introduction
 Welcome to D20Tek.Mediator. This library is a minimal implementation of the Mediator and Command pattern that can be used in any .NET project, whether it is a console application, WebApi, or Blazor application. This code is inspired by the Mediatr package. With Mediatr moving to a commercial license, I built a simplified set of use cases for my own projects as D20Tek.Mediator.
 
-The initial version of this package only supports the Mediator to send commands (both sync and async) to registered CommandHandlers. Commands are routed to the appropriate handler using the ICommand and ICommandHandlerAsync (or ICommandHandler) interfaces.
+The current version of this package supports the Mediator to send commands (both sync and async) to registered CommandHandlers. Commands are routed to the appropriate handler using the ICommand and ICommandHandlerAsync (or ICommandHandler) interfaces.
+Along with commands, the Mediator also supports multi-cast notifications (both sync and async) to registered NotificationHandlers. Notifications are routed to all registered handlers for the same INotification and INotificationHandlerAsync (or INotificationHAndler) interfaces -- regardless of how many handlers are defined.
 
 There are also dependency injection registration functions that will register the Mediator services and all of the command handlers in an assembly (optionally). If you wish to manually register your command handlers, that is also supported.
 
-In the future, we may support more advanced funtionality, like multi-cast notifications and command pipelines to reduce duplicative code. Are those features that you require in your projects? Please leave a comment, and we may add that work to our backlog.
+In the future, we may support more advanced funtionality, like command pipelines to reduce duplicative code. Is that a feature that you require in your projects? Please leave a comment, and we may add that work to our backlog sooner.
 
 ## Installation
 This library is a NuGet package so it is easy to add to your project. To install the package into your solution, you can use the NuGet Package Manager. In PM, please use the following command:

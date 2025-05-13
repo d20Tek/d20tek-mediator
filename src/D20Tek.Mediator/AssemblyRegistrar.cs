@@ -33,6 +33,6 @@ internal static class AssemblyRegistrar
             .SelectMany(type => type.GetInterfaces()
                 .Where(i => i.IsGenericType && _handlerInterfaceTypes.Contains(i.GetGenericTypeDefinition()))
                 .Select(i => new { Interface = i, Implementation = type }))
-            .ForEach(handler => s.TryAdd(
+            .ForEach(handler => s.Add(
                 new ServiceDescriptor(handler.Interface, handler.Implementation, lifetime))));
 }

@@ -30,7 +30,7 @@ public sealed class DependencyInjectionTests
         services.AddMediatorFor<AsyncWithResponse>();
 
         // assert
-        Assert.AreEqual(7, services.Count);
+        Assert.AreEqual(9, services.Count);
         Assert.IsTrue(services.Any(d => d.ServiceType == typeof(IMediator)));
         Assert.IsTrue(services.Any(d => d.ServiceType == typeof(ICommandHandlerAsync<AsyncWithResponse.Command, AsyncWithResponse.Response>)));
         Assert.IsTrue(services.Any(d => d.ServiceType == typeof(ICommandHandlerAsync<AsyncWithNoResponse.Command>)));

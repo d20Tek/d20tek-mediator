@@ -4,7 +4,7 @@ namespace MemberService.Endpoints.Members;
 
 internal sealed class CreateMember
 {
-    public sealed record Command(string FirstName, string LastName, string Email)
+    public sealed record Command(string FirstName, string LastName, string Email, string? CellPhone)
         : ICommand<Result<MemberResponse>>;
 
     public sealed class Handler : ICommandHandlerAsync<Command, Result<MemberResponse>>
@@ -33,7 +33,7 @@ internal sealed class CreateMember
             var newId = store.GetNextId();
             return store.Entities.Any(x => x.Id == newId) ? 
                 Errors.AlreadyExists(newId) : 
-                MemberEntity.Create(newId, command.FirstName, command.LastName, command.Email);
+                MemberEntity.Create(newId, command.FirstName, command.LastName, command.Email, command.CellPhone);
         }
 
         private async Task<MemberResponse> SaveEntity(MemberEntity entity, MemberDataStore store)

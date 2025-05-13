@@ -33,7 +33,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{MemberService_HostAddress}}/api/v1/members/10
+DELETE {{MemberService_HostAddress}}/api/v1/members/11
 Accept: application/json
 
 ###

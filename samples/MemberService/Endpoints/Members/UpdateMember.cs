@@ -4,7 +4,7 @@ namespace MemberService.Endpoints.Members;
 
 internal sealed class UpdateMember
 {
-    public sealed record Command(int Id, string FirstName, string LastName, string Email)
+    public sealed record Command(int Id, string FirstName, string LastName, string Email, string? CellPhone)
         : ICommand<Result<MemberResponse>>;
 
     public sealed class Handler : ICommandHandlerAsync<Command, Result<MemberResponse>>

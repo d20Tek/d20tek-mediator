@@ -1,5 +1,6 @@
 ﻿using D20Tek.Functional.AspNetCore.MinimalApi;
 using D20Tek.Functional.AspNetCore.MinimalApi.Async;
+using MemberService.Endpoints.Members.MemberNotifications;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MemberService.Endpoints.Members;
@@ -36,6 +37,8 @@ internal static class MemberEndpoints
         group.MapPost("/",
             async ([FromServices] IMediator mediator, [FromBody] CreateMemberRequest request) =>
                 await mediator.SendAsync(request.Map())
+                              .IterAsync(async response => await mediator.NotifyAsync(
+                                  new MemberCreatedNotification(response.FirstName, response.Email, response.CellPhone)))
                               .MatchAsync(
                                     s => Task.FromResult(Results.Created($"api/v1/members/{s.Id}", s)),
                                     e => Task.FromResult(TypedResults.Extensions.Problem(e))))
