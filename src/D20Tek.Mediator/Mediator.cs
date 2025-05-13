@@ -1,8 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿namespace D20Tek.Mediator;
 
-namespace D20Tek.Mediator;
-
-public class Mediator : IMediator
+public partial class Mediator : IMediator
 {
     private const string _asyncFunc = "HandleAsync";
     private const string _syncFunc = "Handle";
@@ -37,8 +35,7 @@ public class Mediator : IMediator
         return (TResponse)InvokeHandler(handler.Instance, handler.Type, _syncFunc, [command])!;
     }
 
-    public void Send<TCommand>(TCommand command)
-        where TCommand : ICommand
+    public void Send<TCommand>(TCommand command) where TCommand : ICommand
     {
         var handler = GetHandler(typeof(ICommandHandler<>), command);
         InvokeHandler(handler.Instance, handler.Type, _syncFunc, [command], true);
@@ -47,38 +44,19 @@ public class Mediator : IMediator
     public Task NotifyAsync<TNotification>(TNotification notification, CancellationToken cancellationToken)
         where TNotification : INotification
     {
-        var handler = GetHandler(typeof(INotificationHandlerAsync<>), notification);
-        return (Task)InvokeHandler(handler.Instance, handler.Type, _asyncFunc, [notification, cancellationToken])!;
+        var (handlers, type) = GetMultipleHandlers(typeof(INotificationHandlerAsync<>), notification);
+        var tasks = handlers.Select(h => (Task)InvokeHandler(h, type, _asyncFunc, [notification, cancellationToken])!)
+                            .ToArray();
+
+        return Task.WhenAll(tasks);
     }
 
-    public void Notify<TNotification>(TNotification notification)
-        where TNotification : INotification
+    public void Notify<TNotification>(TNotification notification) where TNotification : INotification
     {
-        var handler = GetHandler(typeof(INotificationHandler<>), notification);
-        InvokeHandler(handler.Instance, handler.Type, _syncFunc, [notification], true);
-    }
-
-    private (object Instance, Type Type) GetHandler(Type typeInterface, object command, Type? typeResponse = null)
-    {
-        ArgumentNullException.ThrowIfNull(command, nameof(command));
-        var handlerType = typeResponse is null ?
-                            typeInterface.MakeGenericType(command.GetType()) :
-                            typeInterface.MakeGenericType(command.GetType(), typeResponse);
-        object handler = _provider.GetRequiredService(handlerType);
-        return (handler, handlerType);
-    }
-
-    internal static object? InvokeHandler(
-        object handler, Type handlerType, string methodName, object[] parameters, bool voidExpected = false)
-    {
-        var method = handlerType.GetMethod(methodName)
-            ?? throw new InvalidOperationException(
-                $"Handler for {handlerType.Name} does not contain {methodName} method");
-
-        var result = method.Invoke(handler, parameters);
-        if (voidExpected is false && result is null)
-            throw new InvalidOperationException($"Invocation of {handlerType.Name}.{methodName} returned null");
-
-        return result;
+        var (handlers, type) = GetMultipleHandlers(typeof(INotificationHandlerAsync<>), notification);
+        foreach (var handler in handlers)
+        {
+            InvokeHandler(handler, type, _syncFunc, [notification], true);
+        }
     }
 }
