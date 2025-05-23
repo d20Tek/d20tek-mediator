@@ -71,7 +71,8 @@ Note that the endpoint code gets the IMediator service from dependency injection
 For more detailed examples on how to use D20Tek.Mediator, please review the following samples:
 
 * [MemberService](samples/MemberService) - Minimal WebApi project that implements CRUD operations for a members database. It uses asynchronous endpoint definitions, commands, and command handlers to show how D20Tek.Mediator can be used for this type of service.
-* [TipCalc.Cli](samples/TipCalc.Cli) - This projec shows how you can use D20Tek.Mediator in a console application. It creates a generic host to support dependency injection. Then uses command and handlers in a particular workflow to implement a tip calculator.
+* [SampleApi](samples/SampleApi) - The simplest of Minimal WepApi projects with only variations of retrieving forecast endpoints.
+* [TipCalc.Cli](samples/TipCalc.Cli) - This project shows how you can use D20Tek.Mediator in a console application. It creates a generic host to support dependency injection. Then uses command and handlers in a particular workflow to implement a tip calculator.
 
 ## Feedback
 If you use this library and have any feedback, bugs, or suggestions, please file them in the Issues section of this repository. I'm still in the process of building the library and samples, so any suggestions that would make it more useable are welcome.
