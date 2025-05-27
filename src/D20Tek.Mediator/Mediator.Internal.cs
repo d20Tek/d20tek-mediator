@@ -31,18 +31,4 @@ public partial class Mediator
         object[] instances = [.. handlers.OfType<object>()];
         return (instances, handlerType);
     }
-
-    internal static object? InvokeHandler(
-        object handler, Type handlerType, string methodName, object[] parameters, bool voidExpected = false)
-    {
-        var method = handlerType.GetMethod(methodName)
-            ?? throw new InvalidOperationException(
-                $"Handler for {handlerType.Name} does not contain {methodName} method");
-
-        var result = method.Invoke(handler, parameters);
-        if (voidExpected is false && result is null)
-            throw new InvalidOperationException($"Invocation of {handlerType.Name}.{methodName} returned null");
-
-        return result;
-    }
 }
