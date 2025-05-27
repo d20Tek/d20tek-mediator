@@ -6,8 +6,6 @@ namespace D20Tek.Mediator;
 
 public partial class Mediator : IMediator
 {
-    private const string _asyncFunc = "HandleAsync";
-    private const string _syncFunc = "Handle";
     private static readonly ConcurrentDictionary<Type, Type> HandlerTypeDictionary = new();
 
     private readonly IServiceProvider _provider;
@@ -21,7 +19,7 @@ public partial class Mediator : IMediator
         ICommand<TResponse> command,
         CancellationToken cancellationToken = default)
     {
-        var (handler, _) = GetHandler(typeof(ICommandHandlerAsync<,>), command, typeof(TResponse));
+        var handler = GetCommandHandler(typeof(ICommandHandlerAsync<,>), command, typeof(TResponse));
         return CommandResponseHandlerAsyncWrapper<TResponse>.Create(handler, command.GetType())
                                                             .HandleAsync(command, cancellationToken);
     }
@@ -31,21 +29,21 @@ public partial class Mediator : IMediator
         CancellationToken cancellationToken = default)
         where TCommand : ICommand
     {
-        var (handler, _) = GetHandler(typeof(ICommandHandlerAsync<>), command);
+        var handler = GetCommandHandler(typeof(ICommandHandlerAsync<>), command);
         return CommandHandlerAsyncWrapper.Create(handler, typeof(TCommand))
                                          .HandleAsync(command, cancellationToken);
     }
 
     public TResponse Send<TResponse>(ICommand<TResponse> command)
     {
-        var (handler, _) = GetHandler(typeof(ICommandHandler<,>), command, typeof(TResponse));
+        var handler = GetCommandHandler(typeof(ICommandHandler<,>), command, typeof(TResponse));
         return CommandResponseHandlerWrapper<TResponse>.Create(handler, command.GetType())
                                                        .Handle(command);
     }
 
     public void Send<TCommand>(TCommand command) where TCommand : ICommand
     {
-        var (handler, _) = GetHandler(typeof(ICommandHandler<>), command);
+        var handler = GetCommandHandler(typeof(ICommandHandler<>), command);
         CommandHandlerWrapper<TCommand>.Create(handler, typeof(TCommand))
                                        .Handle(command);
     }
@@ -53,7 +51,7 @@ public partial class Mediator : IMediator
     public Task NotifyAsync<TNotification>(TNotification notification, CancellationToken cancellationToken)
         where TNotification : INotification
     {
-        var (handlers, handlerType) = GetNotificationHandlers(typeof(INotificationHandlerAsync<>), notification);
+        var handlers = GetNotificationHandlers(typeof(INotificationHandlerAsync<>), notification);
         var tasks = handlers.Select(h => NotificationHandlerAsyncWrapper.Create(h, typeof(TNotification))
                                                                         .HandleAsync(notification, cancellationToken))
                             .ToArray();
@@ -63,7 +61,7 @@ public partial class Mediator : IMediator
 
     public void Notify<TNotification>(TNotification notification) where TNotification : INotification
     {
-        var (handlers, handlerType) = GetNotificationHandlers(typeof(INotificationHandler<>), notification);
+        var handlers = GetNotificationHandlers(typeof(INotificationHandler<>), notification);
         handlers.ForEach(h => NotificationHandlerWrapper.Create(h, typeof(TNotification))
                                                         .Handle(notification));
     }
