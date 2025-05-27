@@ -31,8 +31,9 @@ public partial class Mediator : IMediator
         CancellationToken cancellationToken = default)
         where TCommand : ICommand
     {
-        var handler = GetHandler(typeof(ICommandHandlerAsync<>), command);
-        return (Task)InvokeHandler(handler.Instance, handler.Type, _asyncFunc, [command, cancellationToken])!;
+        var (handler, _) = GetHandler(typeof(ICommandHandlerAsync<>), command);
+        return CommandHandlerAsyncWrapper.Create(handler, typeof(TCommand))
+                                         .HandleAsync(command, cancellationToken);
     }
 
     public TResponse Send<TResponse>(ICommand<TResponse> command)
@@ -40,7 +41,6 @@ public partial class Mediator : IMediator
         var (handler, _) = GetHandler(typeof(ICommandHandler<,>), command, typeof(TResponse));
         return CommandResponseHandlerWrapper<TResponse>.Create(handler, command.GetType())
                                                        .Handle(command);
-        //return (TResponse)InvokeHandler(handler.Instance, handler.Type, _syncFunc, [command])!;
     }
 
     public void Send<TCommand>(TCommand command) where TCommand : ICommand
@@ -48,7 +48,6 @@ public partial class Mediator : IMediator
         var (handler, _) = GetHandler(typeof(ICommandHandler<>), command);
         CommandHandlerWrapper<TCommand>.Create(handler, typeof(TCommand))
                                        .Handle(command);
-        //InvokeHandler(handler.Instance, handler.Type, _syncFunc, [command], true);
     }
 
     public Task NotifyAsync<TNotification>(TNotification notification, CancellationToken cancellationToken)
