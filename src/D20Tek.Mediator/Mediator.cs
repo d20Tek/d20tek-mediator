@@ -21,9 +21,9 @@ public partial class Mediator : IMediator
         ICommand<TResponse> command,
         CancellationToken cancellationToken = default)
     {
-        var handler = GetHandler(typeof(ICommandHandlerAsync<,>), command, typeof(TResponse));
-        return (Task<TResponse>)InvokeHandler(
-            handler.Instance, handler.Type, _asyncFunc, [command, cancellationToken])!;
+        var (handler, _) = GetHandler(typeof(ICommandHandlerAsync<,>), command, typeof(TResponse));
+        return CommandResponseHandlerAsyncWrapper<TResponse>.Create(handler, command.GetType())
+                                                            .HandleAsync(command, cancellationToken);
     }
 
     public Task SendAsync<TCommand>(

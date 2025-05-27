@@ -4,7 +4,7 @@ namespace D20Tek.Mediator.Wrappers;
 
 internal abstract class CommandResponseHandlerWrapper<TResponse>
 {
-    private static readonly ConcurrentDictionary<Type, Type> WrapperTypeDictionary = new();
+    private static readonly ConcurrentDictionary<Type, Type> WrapperTypeDictionary = [];
 
     public abstract TResponse Handle(IBaseCommand command);
 
@@ -19,10 +19,15 @@ internal abstract class CommandResponseHandlerWrapper<TResponse>
 }
 
 
-internal sealed class CommandResponseHandlerWrapper<T, TResponse>(object handler) : CommandResponseHandlerWrapper<TResponse>
+internal sealed class CommandResponseHandlerWrapper<T, TResponse> : CommandResponseHandlerWrapper<TResponse>
     where T : ICommand<TResponse>
 {
-    private readonly ICommandHandler<T, TResponse> _handler = (ICommandHandler<T, TResponse>)handler;
+    private readonly ICommandHandler<T, TResponse> _handler;
+
+    public CommandResponseHandlerWrapper(object handler)
+    {
+        _handler = (ICommandHandler<T, TResponse>)handler;
+    }
 
     public override TResponse Handle(IBaseCommand command) => _handler.Handle((T)command);
 }
