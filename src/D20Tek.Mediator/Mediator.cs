@@ -37,14 +37,18 @@ public partial class Mediator : IMediator
 
     public TResponse Send<TResponse>(ICommand<TResponse> command)
     {
-        var handler = GetHandler(typeof(ICommandHandler<,>), command, typeof(TResponse));
-        return (TResponse)InvokeHandler(handler.Instance, handler.Type, _syncFunc, [command])!;
+        var (handler, _) = GetHandler(typeof(ICommandHandler<,>), command, typeof(TResponse));
+        return CommandResponseHandlerWrapper<TResponse>.Create(handler, command.GetType())
+                                                       .Handle(command);
+        //return (TResponse)InvokeHandler(handler.Instance, handler.Type, _syncFunc, [command])!;
     }
 
     public void Send<TCommand>(TCommand command) where TCommand : ICommand
     {
-        var handler = GetHandler(typeof(ICommandHandler<>), command);
-        InvokeHandler(handler.Instance, handler.Type, _syncFunc, [command], true);
+        var (handler, _) = GetHandler(typeof(ICommandHandler<>), command);
+        CommandHandlerWrapper<TCommand>.Create(handler, typeof(TCommand))
+                                       .Handle(command);
+        //InvokeHandler(handler.Instance, handler.Type, _syncFunc, [command], true);
     }
 
     public Task NotifyAsync<TNotification>(TNotification notification, CancellationToken cancellationToken)

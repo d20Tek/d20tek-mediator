@@ -8,9 +8,12 @@ public partial class Mediator
     {
         ArgumentNullException.ThrowIfNull(command, nameof(command));
 
-        var handlerType = typeResponse is null ?
-                            typeInterface.MakeGenericType(command.GetType()) :
-                            typeInterface.MakeGenericType(command.GetType(), typeResponse);
+        Type handlerType = HandlerTypeDictionary.GetOrAdd(
+            command.GetType(),
+            et => typeResponse is null ?
+                    typeInterface.MakeGenericType(command.GetType()) :
+                    typeInterface.MakeGenericType(command.GetType(), typeResponse));
+
         object handler = _provider.GetRequiredService(handlerType);
         return (handler, handlerType);
     }
