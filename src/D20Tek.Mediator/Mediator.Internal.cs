@@ -15,12 +15,16 @@ public partial class Mediator
         return (handler, handlerType);
     }
 
-    private (object[] Instances, Type Type) GetMultipleHandlers(Type typeInterface, object notification)
+    private (object[] Instances, Type Type) GetNotificationHandlers(Type typeInterface, object notification)
     {
         ArgumentNullException.ThrowIfNull(notification, nameof(notification));
 
-        var handlerType = typeInterface.MakeGenericType(notification.GetType());
+        Type handlerType = HandlerTypeDictionary.GetOrAdd(
+            notification.GetType(),
+            et => typeInterface.MakeGenericType(et));
+
         var handlers = _provider.GetServices(handlerType);
+
         object[] instances = [.. handlers.OfType<object>()];
         return (instances, handlerType);
     }

@@ -1,9 +1,15 @@
-﻿namespace D20Tek.Mediator;
+﻿using D20Tek.Functional;
+using D20Tek.Mediator.Wrappers;
+using System.Collections.Concurrent;
+
+namespace D20Tek.Mediator;
 
 public partial class Mediator : IMediator
 {
     private const string _asyncFunc = "HandleAsync";
     private const string _syncFunc = "Handle";
+    private static readonly ConcurrentDictionary<Type, Type> HandlerTypeDictionary = new();
+
     private readonly IServiceProvider _provider;
 
     public Mediator(IServiceProvider provider)
@@ -44,8 +50,9 @@ public partial class Mediator : IMediator
     public Task NotifyAsync<TNotification>(TNotification notification, CancellationToken cancellationToken)
         where TNotification : INotification
     {
-        var (handlers, type) = GetMultipleHandlers(typeof(INotificationHandlerAsync<>), notification);
-        var tasks = handlers.Select(h => (Task)InvokeHandler(h, type, _asyncFunc, [notification, cancellationToken])!)
+        var (handlers, handlerType) = GetNotificationHandlers(typeof(INotificationHandlerAsync<>), notification);
+        var tasks = handlers.Select(h => NotificationHandlerAsyncWrapper.Create(h, typeof(TNotification))
+                                                                        .HandleAsync(notification, cancellationToken))
                             .ToArray();
 
         return Task.WhenAll(tasks);
@@ -53,10 +60,8 @@ public partial class Mediator : IMediator
 
     public void Notify<TNotification>(TNotification notification) where TNotification : INotification
     {
-        var (handlers, type) = GetMultipleHandlers(typeof(INotificationHandler<>), notification);
-        foreach (var handler in handlers)
-        {
-            InvokeHandler(handler, type, _syncFunc, [notification], true);
-        }
+        var (handlers, handlerType) = GetNotificationHandlers(typeof(INotificationHandler<>), notification);
+        handlers.ForEach(h => NotificationHandlerWrapper.Create(h, typeof(TNotification))
+                                                        .Handle(notification));
     }
 }
