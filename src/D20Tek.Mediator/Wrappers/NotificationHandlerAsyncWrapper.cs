@@ -19,10 +19,15 @@ internal abstract class NotificationHandlerAsyncWrapper
 }
 
 // Generic wrapper that provides strong typing for handler invocation
-internal sealed class NotificationHandlerAsyncWrapper<T>(object handler) : NotificationHandlerAsyncWrapper
+internal sealed class NotificationHandlerAsyncWrapper<T> : NotificationHandlerAsyncWrapper
     where T : INotification
 {
-    private readonly INotificationHandlerAsync<T> _handler = (INotificationHandlerAsync<T>)handler;
+    private readonly INotificationHandlerAsync<T> _handler;
+
+    public NotificationHandlerAsyncWrapper(object handler)
+    {
+        _handler = (INotificationHandlerAsync<T>)handler;
+    }
 
     public override async Task HandleAsync(
         INotification notification,

@@ -19,10 +19,15 @@ internal abstract class NotificationHandlerWrapper
 }
 
 // Generic wrapper that provides strong typing for handler invocation
-internal sealed class NotificationHandlerWrapper<T>(object handler) : NotificationHandlerWrapper
+internal sealed class NotificationHandlerWrapper<T> : NotificationHandlerWrapper
     where T : INotification
 {
-    private readonly INotificationHandler<T> _handler = (INotificationHandler<T>)handler;
+    private readonly INotificationHandler<T> _handler;
+
+    public NotificationHandlerWrapper(object handler)
+    {
+        _handler = (INotificationHandler<T>)handler;
+    }
 
     public override void Handle(INotification notification) =>
         _handler.Handle((T)notification);

@@ -19,10 +19,14 @@ internal abstract class CommandHandlerWrapper
 }
 
 // Generic wrapper that provides strong typing for handler invocation
-internal sealed class CommandHandlerWrapper<T>(object handler) : CommandHandlerWrapper
+internal sealed class CommandHandlerWrapper<T> : CommandHandlerWrapper
     where T : ICommand
 {
-    private readonly ICommandHandler<T> _handler = (ICommandHandler<T>)handler;
+    private readonly ICommandHandler<T> _handler;
+    public CommandHandlerWrapper(object handler)
+    {
+        _handler = (ICommandHandler<T>)handler;
+    }
 
     public override void Handle(IBaseCommand command) => _handler.Handle((T)command);
 }

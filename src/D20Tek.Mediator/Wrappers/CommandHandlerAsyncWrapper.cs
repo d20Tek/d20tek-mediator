@@ -19,10 +19,15 @@ internal abstract class CommandHandlerAsyncWrapper
 }
 
 // Generic wrapper that provides strong typing for handler invocation
-internal sealed class CommandHandlerAsyncWrapper<T>(object handler) : CommandHandlerAsyncWrapper
+internal sealed class CommandHandlerAsyncWrapper<T> : CommandHandlerAsyncWrapper
     where T : ICommand
 {
-    private readonly ICommandHandlerAsync<T> _handler = (ICommandHandlerAsync<T>)handler;
+    private readonly ICommandHandlerAsync<T> _handler;
+
+    public CommandHandlerAsyncWrapper(object handler)
+    {
+        _handler = (ICommandHandlerAsync<T>)handler;
+    }
 
     public override Task HandleAsync(IBaseCommand command, CancellationToken token) =>
         _handler.HandleAsync((T)command, token);

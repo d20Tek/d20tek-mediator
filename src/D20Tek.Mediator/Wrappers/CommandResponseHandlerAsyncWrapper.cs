@@ -19,12 +19,16 @@ internal abstract class CommandResponseHandlerAsyncWrapper<TResponse>
 }
 
 // Generic wrapper that provides strong typing for handler invocation
-internal sealed class CommandResponseHandlerAsyncWrapper<TCommand, TResponse>(object handler) :
+internal sealed class CommandResponseHandlerAsyncWrapper<TCommand, TResponse> :
     CommandResponseHandlerAsyncWrapper<TResponse>
     where TCommand : ICommand<TResponse>
 {
-    private readonly ICommandHandlerAsync<TCommand, TResponse> _handler =
-        (ICommandHandlerAsync<TCommand, TResponse>)handler;
+    private readonly ICommandHandlerAsync<TCommand, TResponse> _handler;
+
+    public CommandResponseHandlerAsyncWrapper(object handler)
+    {
+        _handler = (ICommandHandlerAsync<TCommand, TResponse>)handler;
+    }
 
     public override Task<TResponse> HandleAsync(IBaseCommand command, CancellationToken token) =>
         _handler.HandleAsync((TCommand)command, token);
