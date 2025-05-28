@@ -6,14 +6,14 @@ internal static class WeatherForecastEndpoints
     {
         routes.MapGet("api/v1/async/weatherforecast",
             async (IMediator mediator, CancellationToken cancellationToken) =>
-                await mediator.SendAsync(new WeatherForecastCommand(), cancellationToken))
+                await mediator.SendAsync(new WeatherForecastAsyncCommand(), cancellationToken))
               .Produces<WeatherForecast[]>()
               .WithName("GetWeatherForecastAsync")
               .WithTags("Weather Service");
 
         routes.MapGet("api/v1/async/weatherforecast/poke",
             async (IMediator mediator, CancellationToken cancellationToken) =>
-                await mediator.SendAsync(new PokeCommand(), cancellationToken))
+                await mediator.SendAsync(new PokeAsyncCommand(), cancellationToken))
               .WithName("PokeWeatherForecastAsync")
               .WithTags("Weather Service");
 
