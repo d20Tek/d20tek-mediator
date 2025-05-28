@@ -1,5 +1,7 @@
 ﻿using D20Tek.Mediator.UnitTests.Commands;
 using D20Tek.Mediator.UnitTests.Mocks;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace D20Tek.Mediator.UnitTests;
 
@@ -100,4 +102,28 @@ public sealed class MediatorTests
         // act
         mediator.Send(new SyncWithNoResponse.Command());
     }
+
+    [TestMethod]
+    public void Send_WithSyncAndAsyncHandlers_ThrowsException()
+    {
+        // arrange
+        ServiceProviderFactory.ServiceTypes[] handlerTypes =
+        [
+            new(typeof(ICommandHandler<CommonWithNoResponse.Command>), typeof(CommonWithNoResponse.Handler)),
+            new(typeof(ICommandHandlerAsync<CommonWithNoResponse.Command>), typeof(CommonWithNoResponse.HandlerAsync)),
+        ];
+
+        var provider = ServiceProviderFactory.CreateWith(handlerTypes);
+        var mediator = new Mediator(provider);
+
+        // act
+        var result = mediator.SendAsync(new CommonWithNoResponse.Command());
+
+        // assert
+        var ex = Assert.Throws<TargetInvocationException>([ExcludeFromCodeCoverage] () => 
+                    mediator.Send(new CommonWithNoResponse.Command()));
+        Assert.AreEqual(typeof(ArgumentException), ex.InnerException!.GetType());
+    }
+
+
 }

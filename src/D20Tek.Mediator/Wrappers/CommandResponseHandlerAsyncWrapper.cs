@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using D20Tek.Mediator.Common;
+using System.Collections.Concurrent;
 
 namespace D20Tek.Mediator.Wrappers;
 
@@ -27,6 +28,8 @@ internal sealed class CommandResponseHandlerAsyncWrapper<TCommand, TResponse> :
 
     public CommandResponseHandlerAsyncWrapper(object handler)
     {
+        ArgumentTypeExtension.ThrowIfNotAssignableTo<ICommandHandlerAsync<TCommand, TResponse>>(
+            handler.GetType(), nameof(handler));
         _handler = (ICommandHandlerAsync<TCommand, TResponse>)handler;
     }
 

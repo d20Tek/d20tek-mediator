@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using D20Tek.Mediator.Common;
+using System.Collections.Concurrent;
 
 namespace D20Tek.Mediator.Wrappers;
 
@@ -26,6 +27,7 @@ internal sealed class NotificationHandlerWrapper<T> : NotificationHandlerWrapper
 
     public NotificationHandlerWrapper(object handler)
     {
+        ArgumentTypeExtension.ThrowIfNotAssignableTo<INotificationHandler<T>>(handler.GetType(), nameof(handler));
         _handler = (INotificationHandler<T>)handler;
     }
 

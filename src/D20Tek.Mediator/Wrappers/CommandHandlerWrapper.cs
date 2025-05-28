@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using D20Tek.Mediator.Common;
+using System.Collections.Concurrent;
 
 namespace D20Tek.Mediator.Wrappers;
 
@@ -25,6 +26,7 @@ internal sealed class CommandHandlerWrapper<T> : CommandHandlerWrapper
     private readonly ICommandHandler<T> _handler;
     public CommandHandlerWrapper(object handler)
     {
+        ArgumentTypeExtension.ThrowIfNotAssignableTo<ICommandHandler<T>>(handler.GetType(), nameof(handler));
         _handler = (ICommandHandler<T>)handler;
     }
 

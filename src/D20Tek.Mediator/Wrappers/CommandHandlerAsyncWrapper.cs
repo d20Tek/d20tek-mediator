@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using D20Tek.Mediator.Common;
+using System.Collections.Concurrent;
 
 namespace D20Tek.Mediator.Wrappers;
 
@@ -26,7 +27,8 @@ internal sealed class CommandHandlerAsyncWrapper<T> : CommandHandlerAsyncWrapper
 
     public CommandHandlerAsyncWrapper(object handler)
     {
-        _handler = (ICommandHandlerAsync<T>)handler;
+        ArgumentTypeExtension.ThrowIfNotAssignableTo<ICommandHandlerAsync<T>>(handler.GetType(), nameof(handler));
+       _handler = (ICommandHandlerAsync<T>)handler;
     }
 
     public override Task HandleAsync(IBaseCommand command, CancellationToken token) =>

@@ -7,12 +7,13 @@ public partial class Mediator
     private object GetCommandHandler(Type typeInterface, object command, Type? typeResponse = null)
     {
         ArgumentNullException.ThrowIfNull(command, nameof(command));
+        var commandType = command.GetType();
 
         Type handlerType = HandlerTypeDictionary.GetOrAdd(
-            command.GetType(),
+            commandType,
             et => typeResponse is null ?
-                    typeInterface.MakeGenericType(command.GetType()) :
-                    typeInterface.MakeGenericType(command.GetType(), typeResponse));
+                    typeInterface.MakeGenericType(commandType) :
+                    typeInterface.MakeGenericType(commandType, typeResponse));
 
         return _provider.GetRequiredService(handlerType);
     }
