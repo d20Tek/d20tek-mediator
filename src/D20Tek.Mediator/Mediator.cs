@@ -1,7 +1,6 @@
 ﻿using D20Tek.Functional;
 using D20Tek.Mediator.Wrappers;
 using System.Collections.Concurrent;
-using System.Reflection;
 
 namespace D20Tek.Mediator;
 
@@ -20,20 +19,12 @@ public partial class Mediator : IMediator
         ICommand<TResponse> command,
         CancellationToken cancellationToken = default)
     {
-        try
+        return TryOperation("SendAsync<TResponse>", () =>
         {
             var handler = GetCommandHandler(typeof(ICommandHandlerAsync<,>), command, typeof(TResponse));
             return CommandResponseHandlerAsyncWrapper<TResponse>.Create(handler, command.GetType())
                                                                 .HandleAsync(command, cancellationToken);
-        }
-        catch (TargetInvocationException invEx)
-        {
-            throw new MediatorExecutionException("SendAsync", invEx.InnerException ?? invEx);
-        }
-        catch (Exception ex)
-        {
-            throw new MediatorExecutionException("SendAsync", ex);
-        }
+        });
     }
 
     public Task SendAsync<TCommand>(
@@ -41,51 +32,55 @@ public partial class Mediator : IMediator
         CancellationToken cancellationToken = default)
         where TCommand : ICommand
     {
-        var handler = GetCommandHandler(typeof(ICommandHandlerAsync<>), command);
-        return CommandHandlerAsyncWrapper.Create(handler, typeof(TCommand))
-                                         .HandleAsync(command, cancellationToken);
+        return TryOperation("SendAsync", () =>
+        {
+            var handler = GetCommandHandler(typeof(ICommandHandlerAsync<>), command);
+            return CommandHandlerAsyncWrapper.Create(handler, typeof(TCommand))
+                                             .HandleAsync(command, cancellationToken);
+        });
     }
 
     public TResponse Send<TResponse>(ICommand<TResponse> command)
     {
-        var handler = GetCommandHandler(typeof(ICommandHandler<,>), command, typeof(TResponse));
-        return CommandResponseHandlerWrapper<TResponse>.Create(handler, command.GetType())
-                                                       .Handle(command);
+        return TryOperation("Send<TResponse>", () =>
+        {
+            var handler = GetCommandHandler(typeof(ICommandHandler<,>), command, typeof(TResponse));
+            return CommandResponseHandlerWrapper<TResponse>.Create(handler, command.GetType())
+                                                           .Handle(command);
+        });
     }
 
     public void Send<TCommand>(TCommand command) where TCommand : ICommand
     {
-        try
+        TryOperation("Send", () =>
         {
             var handler = GetCommandHandler(typeof(ICommandHandler<>), command);
             CommandHandlerWrapper<TCommand>.Create(handler, typeof(TCommand))
                                            .Handle(command);
-        }
-        catch (TargetInvocationException invEx)
-        {
-            throw new MediatorExecutionException("Send", invEx.InnerException ?? invEx);
-        }
-        catch (Exception ex)
-        {
-            throw new MediatorExecutionException("Send", ex);
-        }
+        });
     }
 
     public Task NotifyAsync<TNotification>(TNotification notification, CancellationToken cancellationToken)
         where TNotification : INotification
     {
-        var handlers = GetNotificationHandlers(typeof(INotificationHandlerAsync<>), notification);
-        var tasks = handlers.Select(h => NotificationHandlerAsyncWrapper.Create(h, typeof(TNotification))
-                                                                        .HandleAsync(notification, cancellationToken))
-                            .ToArray();
+        return TryOperation("NotifyAsync", () =>
+        {
+            var handlers = GetNotificationHandlers(typeof(INotificationHandlerAsync<>), notification);
+            var tasks = handlers.Select(h => NotificationHandlerAsyncWrapper.Create(h, typeof(TNotification))
+                                                                            .HandleAsync(notification, cancellationToken))
+                                .ToArray();
 
-        return Task.WhenAll(tasks);
+            return Task.WhenAll(tasks);
+        });
     }
 
     public void Notify<TNotification>(TNotification notification) where TNotification : INotification
     {
-        var handlers = GetNotificationHandlers(typeof(INotificationHandler<>), notification);
-        handlers.ForEach(h => NotificationHandlerWrapper.Create(h, typeof(TNotification))
-                                                        .Handle(notification));
+        TryOperation("Notify", () =>
+        {
+            var handlers = GetNotificationHandlers(typeof(INotificationHandler<>), notification);
+            handlers.ForEach(h => NotificationHandlerWrapper.Create(h, typeof(TNotification))
+                                                            .Handle(notification));
+        });
     }
 }

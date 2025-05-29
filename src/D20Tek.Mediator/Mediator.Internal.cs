@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace D20Tek.Mediator;
 
@@ -28,5 +29,37 @@ public partial class Mediator
 
         var handlers = _provider.GetServices(handlerType);
         return [.. handlers.OfType<object>()];
+    }
+
+    private TResponse TryOperation<TResponse>(string operationName, Func<TResponse> operation)
+    {
+        try
+        {
+            return operation();
+        }
+        catch (TargetInvocationException invEx)
+        {
+            throw new MediatorExecutionException(operationName, invEx.InnerException ?? invEx);
+        }
+        catch (Exception ex)
+        {
+            throw new MediatorExecutionException(operationName, ex);
+        }
+    }
+
+    private void TryOperation(string operationName, Action operation)
+    {
+        try
+        {
+            operation();
+        }
+        catch (TargetInvocationException invEx)
+        {
+            throw new MediatorExecutionException(operationName, invEx.InnerException ?? invEx);
+        }
+        catch (Exception ex)
+        {
+            throw new MediatorExecutionException(operationName, ex);
+        }
     }
 }
