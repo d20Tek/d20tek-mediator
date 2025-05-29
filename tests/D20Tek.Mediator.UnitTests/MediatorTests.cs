@@ -123,6 +123,7 @@ public sealed class MediatorTests
         var ex = Assert.Throws<MediatorExecutionException>([ExcludeFromCodeCoverage] () => 
                     mediator.Send(new CommonWithNoResponse.Command()));
         Assert.AreEqual(typeof(ArgumentException), ex.InnerException!.GetType());
+        Assert.AreEqual("Send", ex.Operation);
     }
 
 

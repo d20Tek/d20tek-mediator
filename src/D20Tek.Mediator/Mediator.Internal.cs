@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace D20Tek.Mediator;
@@ -31,6 +32,7 @@ public partial class Mediator
         return [.. handlers.OfType<object>()];
     }
 
+    [ExcludeFromCodeCoverage]
     private TResponse TryOperation<TResponse>(string operationName, Func<TResponse> operation)
     {
         try
@@ -47,6 +49,7 @@ public partial class Mediator
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private void TryOperation(string operationName, Action operation)
     {
         try
