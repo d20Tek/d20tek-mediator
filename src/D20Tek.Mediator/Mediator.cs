@@ -1,6 +1,7 @@
 ﻿using D20Tek.Functional;
 using D20Tek.Mediator.Wrappers;
 using System.Collections.Concurrent;
+using System.Reflection;
 
 namespace D20Tek.Mediator;
 
@@ -19,9 +20,20 @@ public partial class Mediator : IMediator
         ICommand<TResponse> command,
         CancellationToken cancellationToken = default)
     {
-        var handler = GetCommandHandler(typeof(ICommandHandlerAsync<,>), command, typeof(TResponse));
-        return CommandResponseHandlerAsyncWrapper<TResponse>.Create(handler, command.GetType())
-                                                            .HandleAsync(command, cancellationToken);
+        try
+        {
+            var handler = GetCommandHandler(typeof(ICommandHandlerAsync<,>), command, typeof(TResponse));
+            return CommandResponseHandlerAsyncWrapper<TResponse>.Create(handler, command.GetType())
+                                                                .HandleAsync(command, cancellationToken);
+        }
+        catch (TargetInvocationException invEx)
+        {
+            throw new MediatorExecutionException("SendAsync", invEx.InnerException ?? invEx);
+        }
+        catch (Exception ex)
+        {
+            throw new MediatorExecutionException("SendAsync", ex);
+        }
     }
 
     public Task SendAsync<TCommand>(
@@ -43,9 +55,20 @@ public partial class Mediator : IMediator
 
     public void Send<TCommand>(TCommand command) where TCommand : ICommand
     {
-        var handler = GetCommandHandler(typeof(ICommandHandler<>), command);
-        CommandHandlerWrapper<TCommand>.Create(handler, typeof(TCommand))
-                                       .Handle(command);
+        try
+        {
+            var handler = GetCommandHandler(typeof(ICommandHandler<>), command);
+            CommandHandlerWrapper<TCommand>.Create(handler, typeof(TCommand))
+                                           .Handle(command);
+        }
+        catch (TargetInvocationException invEx)
+        {
+            throw new MediatorExecutionException("Send", invEx.InnerException ?? invEx);
+        }
+        catch (Exception ex)
+        {
+            throw new MediatorExecutionException("Send", ex);
+        }
     }
 
     public Task NotifyAsync<TNotification>(TNotification notification, CancellationToken cancellationToken)
