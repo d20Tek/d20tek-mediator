@@ -11,10 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="D20Tek.Functional.AspNetCore" Version="0.9.14" />
-    <PackageReference Include="LowDb.Net" Version="1.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />
-    <PackageReference Include="Scalar.AspNetCore" Version="2.2.7" />
+    <PackageReference Include="D20Tek.Functional.AspNetCore" Version="0.9.16" />
+    <PackageReference Include="LowDb.Net" Version="1.2.3" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.5.3" />
   </ItemGroup>
 
   <ItemGroup>
