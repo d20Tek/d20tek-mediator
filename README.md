@@ -14,7 +14,7 @@ In the future, we may support more advanced funtionality, like command pipelines
 This library is a NuGet package so it is easy to add to your project. To install the package into your solution, you can use the NuGet Package Manager. In PM, please use the following command:
 
 ```cmd
-PM > Install-Package D20Tek.Mediator -Version 0.9.5
+PM > Install-Package D20Tek.Mediator -Version 0.9.6
 ```
 
 To install in the Visual Studio UI, go to the Tools menu > "Manage NuGet Packages". Then search for D20Tek.Mediator, and install whichever packages you require from there.

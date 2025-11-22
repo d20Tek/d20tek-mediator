@@ -1,14 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
-
-namespace D20Tek.Mediator;
+﻿namespace D20Tek.Mediator;
 
 public partial class Mediator
 {
     private object GetCommandHandler(Type typeInterface, object command, Type? typeResponse = null)
     {
-        ArgumentNullException.ThrowIfNull(command, nameof(command));
+        ArgumentNullException.ThrowIfNull(command);
         var commandType = command.GetType();
 
         Type handlerType = HandlerTypeDictionary.GetOrAdd(
@@ -22,7 +18,7 @@ public partial class Mediator
 
     private object[] GetNotificationHandlers(Type typeInterface, object notification)
     {
-        ArgumentNullException.ThrowIfNull(notification, nameof(notification));
+        ArgumentNullException.ThrowIfNull(notification);
 
         Type handlerType = HandlerTypeDictionary.GetOrAdd(
             notification.GetType(),
@@ -33,7 +29,7 @@ public partial class Mediator
     }
 
     [ExcludeFromCodeCoverage]
-    private TResponse TryOperation<TResponse>(string operationName, Func<TResponse> operation)
+    private static TResponse TryOperation<TResponse>(string operationName, Func<TResponse> operation)
     {
         try
         {
@@ -50,7 +46,7 @@ public partial class Mediator
     }
 
     [ExcludeFromCodeCoverage]
-    private void TryOperation(string operationName, Action operation)
+    private static void TryOperation(string operationName, Action operation)
     {
         try
         {

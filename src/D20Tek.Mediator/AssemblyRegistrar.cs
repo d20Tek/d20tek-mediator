@@ -1,8 +1,4 @@
-﻿using D20Tek.Functional;
-using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
-
-namespace D20Tek.Mediator;
+﻿namespace D20Tek.Mediator;
 
 internal static class AssemblyRegistrar
 {
