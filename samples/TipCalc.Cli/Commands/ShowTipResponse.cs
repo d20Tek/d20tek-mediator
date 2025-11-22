@@ -1,10 +1,12 @@
-﻿using Spectre.Console;
-
-namespace TipCalc.Cli.Commands;
+﻿namespace TipCalc.Cli.Commands;
 
 internal class ShowTipResponse
 {
-    public record Command(TipCommand Request, decimal TipAmount, decimal TotalAmount, decimal AmountPerTipper) : ICommand;
+    public record Command(
+        TipCommand Request,
+        decimal TipAmount,
+        decimal TotalAmount,
+        decimal AmountPerTipper) : ICommand;
 
     public class Handler : ICommandHandler<Command>
     {

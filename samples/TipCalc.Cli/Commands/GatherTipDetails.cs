@@ -1,9 +1,4 @@
-﻿using D20Tek.Functional;
-using D20Tek.Mediator;
-using Spectre.Console;
-using TipCalc.Cli.Common;
-
-namespace TipCalc.Cli.Commands;
+﻿namespace TipCalc.Cli.Commands;
 
 internal class GatherTipDetails
 {

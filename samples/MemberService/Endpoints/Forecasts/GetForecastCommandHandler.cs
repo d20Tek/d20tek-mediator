@@ -8,12 +8,13 @@ internal sealed class GetForecastCommandHandler : ICommandHandler<WeatherForecas
     ];
 
     public WeatherForecast[] Handle(WeatherForecastCommand command) =>
-        Enumerable.Range(1, 5)
-                  .Select(index =>
-                        new WeatherForecast
-                        (
-                            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                            Random.Shared.Next(-20, 55),
-                            _summaries[Random.Shared.Next(_summaries.Length)]
-                        )).ToArray();
+        [.. Enumerable.Range(1, 5)
+                      .Select(index =>
+                            new WeatherForecast
+                            (
+                                DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                                Random.Shared.Next(-20, 55),
+                                _summaries[Random.Shared.Next(_summaries.Length)]
+                            ))
+        ];
 }

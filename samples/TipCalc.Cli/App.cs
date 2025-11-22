@@ -3,21 +3,14 @@ using TipCalc.Cli.Commands;
 
 namespace TipCalc.Cli;
 
-internal class App
+internal class App(
+    ICommandHandler<GatherTipDetails.Command, Result<TipCommand>> gatherDetailsHandler,
+    ICommandHandler<TipCommand, Result<TipResponse>> calculateTipHandler,
+    ICommandHandler<ShowTipResponse.Command> showTipHandler)
 {
-    private readonly ICommandHandler<GatherTipDetails.Command, Result<TipCommand>> _gatherDetailsHandler;
-    private readonly ICommandHandler<TipCommand, Result<TipResponse>> _calculateTipHandler;
-    private readonly ICommandHandler<ShowTipResponse.Command> _showTipHandler;
-
-    public App(
-        ICommandHandler<GatherTipDetails.Command, Result<TipCommand>> gatherDetailsHandler,
-        ICommandHandler<TipCommand, Result<TipResponse>> calculateTipHandler,
-        ICommandHandler<ShowTipResponse.Command> showTipHandler)
-    {
-        _gatherDetailsHandler = gatherDetailsHandler;
-        _calculateTipHandler = calculateTipHandler;
-        _showTipHandler = showTipHandler;
-    }
+    private readonly ICommandHandler<GatherTipDetails.Command, Result<TipCommand>> _gatherDetailsHandler = gatherDetailsHandler;
+    private readonly ICommandHandler<TipCommand, Result<TipResponse>> _calculateTipHandler = calculateTipHandler;
+    private readonly ICommandHandler<ShowTipResponse.Command> _showTipHandler = showTipHandler;
 
     public int Run()
     {

@@ -6,11 +6,9 @@ internal sealed class DeleteMember
 {
     public sealed record Command(int Id) : ICommand<Result<MemberResponse>>;
 
-    public sealed class Handler : ICommandHandlerAsync<Command, Result<MemberResponse>>
+    public sealed class Handler(IMemberDb db) : ICommandHandlerAsync<Command, Result<MemberResponse>>
     {
-        private readonly IMemberDb _db;
-
-        public Handler(IMemberDb db) => _db = db;
+        private readonly IMemberDb _db = db;
 
         public async Task<Result<MemberResponse>> HandleAsync(Command command, CancellationToken cancellationToken)
         {

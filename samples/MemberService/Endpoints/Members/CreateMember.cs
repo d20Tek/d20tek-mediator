@@ -4,14 +4,12 @@ namespace MemberService.Endpoints.Members;
 
 internal sealed class CreateMember
 {
-    public sealed record Command(string FirstName, string LastName, string Email, string? CellPhone)
-        : ICommand<Result<MemberResponse>>;
+    public sealed record Command(string FirstName, string LastName, string Email, string? CellPhone) :
+        ICommand<Result<MemberResponse>>;
 
-    public sealed class Handler : ICommandHandlerAsync<Command, Result<MemberResponse>>
+    public sealed class Handler(IMemberDb db) : ICommandHandlerAsync<Command, Result<MemberResponse>>
     {
-        private readonly IMemberDb _db;
-
-        public Handler(IMemberDb db) => _db = db;
+        private readonly IMemberDb _db = db;
 
         public async Task<Result<MemberResponse>> HandleAsync(Command command, CancellationToken cancellationToken)
         {
@@ -28,12 +26,12 @@ internal sealed class CreateMember
             }
         }
 
-        private Result<MemberEntity> CreateEntity(Command command, MemberDataStore store)
+        private static Result<MemberEntity> CreateEntity(Command command, MemberDataStore store)
         {
             var newId = store.GetNextId();
-            return store.Entities.Any(x => x.Id == newId) ? 
-                Errors.AlreadyExists(newId) : 
-                MemberEntity.Create(newId, command.FirstName, command.LastName, command.Email, command.CellPhone);
+            return store.Entities.Any(x => x.Id == newId)
+                ? Errors.AlreadyExists(newId)
+                : MemberEntity.Create(newId, command.FirstName, command.LastName, command.Email, command.CellPhone);
         }
 
         private async Task<MemberResponse> SaveEntity(MemberEntity entity, MemberDataStore store)

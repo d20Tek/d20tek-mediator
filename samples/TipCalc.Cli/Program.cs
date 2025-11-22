@@ -1,6 +1,7 @@
 ﻿global using D20Tek.Functional;
 global using D20Tek.Mediator;
 global using TipCalc.Cli.Common;
+global using Spectre.Console;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
