@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace D20Tek.Mediator.UnitTests.Commands;
+﻿namespace D20Tek.Mediator.UnitTests.Commands;
 
 internal class SyncSubscriber
 {

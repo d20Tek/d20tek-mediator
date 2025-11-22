@@ -1,7 +1,4 @@
-﻿using D20Tek.Mediator.UnitTests.Commands;
-using D20Tek.Mediator.UnitTests.Mocks;
-
-namespace D20Tek.Mediator.UnitTests;
+﻿namespace D20Tek.Mediator.UnitTests;
 
 [TestClass]
 public class MediatorNotificationTests

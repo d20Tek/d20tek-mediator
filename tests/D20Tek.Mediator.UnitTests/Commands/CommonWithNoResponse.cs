@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace D20Tek.Mediator.UnitTests.Commands;
+﻿namespace D20Tek.Mediator.UnitTests.Commands;
 
 [ExcludeFromCodeCoverage]
 internal class CommonWithNoResponse
@@ -9,9 +7,7 @@ internal class CommonWithNoResponse
 
     public sealed class Handler : ICommandHandler<Command>
     {
-        public void Handle(Command command)
-        {
-        }
+        public void Handle(Command command) { }
     }
 
     public sealed class HandlerAsync : ICommandHandlerAsync<Command>

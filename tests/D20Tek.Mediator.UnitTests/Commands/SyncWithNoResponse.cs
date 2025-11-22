@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace D20Tek.Mediator.UnitTests.Commands;
+﻿namespace D20Tek.Mediator.UnitTests.Commands;
 
 internal class SyncWithNoResponse
 {
@@ -9,8 +7,6 @@ internal class SyncWithNoResponse
 
     public sealed class Handler : ICommandHandler<Command>
     {
-        public void Handle(Command command)
-        {
-        }
+        public void Handle(Command command) { }
     }
 }

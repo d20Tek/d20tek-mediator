@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace D20Tek.Mediator.UnitTests.Commands;
+﻿namespace D20Tek.Mediator.UnitTests.Commands;
 
 internal class AsyncWithNoResponse
 {
@@ -9,7 +7,6 @@ internal class AsyncWithNoResponse
 
     public sealed class Handler : ICommandHandlerAsync<Command>
     {
-        public Task HandleAsync(Command command, CancellationToken cancellationToken) =>
-            Task.CompletedTask;
+        public Task HandleAsync(Command command, CancellationToken cancellationToken) => Task.CompletedTask;
     }
 }
