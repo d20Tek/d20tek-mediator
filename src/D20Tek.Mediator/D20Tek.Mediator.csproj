@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <PackageReference Include="D20Tek.Functional" Version="1.1.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup>
